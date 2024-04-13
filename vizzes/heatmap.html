@@ -21,8 +21,7 @@
         .heatmap-rect {
             stroke: #fff;
             stroke-width: 1.2px;
-            rx: 5;
-            ry: 5;
+            
         }
 
         .chart-label {
@@ -41,14 +40,14 @@
 <body>
     <div id="chart-container"></div>
     <script>
-    
+
         var canvasWidth = 1400;
-        var canvasHeight = 600;
+        var canvasHeight = 400;
         var margin = {
             top: 50,
             right: 600,
             bottom: 50,
-            left: 100,
+            left: 150,
         };
 
         var svg = d3
@@ -61,19 +60,19 @@
         var width = canvasWidth - margin.left - margin.right;
         var height = canvasHeight - margin.top - margin.bottom;
 
+        var yScale = d3
+            .scaleBand()
+            .range([0, height])
+            .padding(0.03);
         var xScale = d3
             .scaleBand()
             .range([0, width])
             .padding(0.05);
-        var yScale = d3
-            .scaleBand()
-            .range([height, 0])
-            .padding(0.05);
 
         var heatmapColor = d3
             .scaleSequential()
-            .interpolator(d3.interpolateViridis)
-            .domain([20, 140]);
+            .interpolator(d3.interpolateRdYlGn) // Using a green-to-red color scale
+            .domain([140, 20]); // Reversed domain to have green for lower values and red for higher values
 
 
         var container_g = svg
@@ -83,13 +82,13 @@
         d3.csv(
             'https://gist.githubusercontent.com/chansrinivas/fd27e6043da02a8bde32d72a8440dd32/raw/00f25153eb2f1c10f1b653993c54cfb086605c4e/ozone.csv',
         ).then((data) => {
-            xScale.domain(
+            yScale.domain(
                 data.map(function (d) {
                     return d.Zone;
                 }),
             );
 
-            yScale.domain(
+            xScale.domain(
                 data.map(function (d) {
                     return d.Month;
                 }),
@@ -101,7 +100,7 @@
                 .attr('class', 'chart-label')
                 .attr('x', canvasWidth / 4.6)
                 .attr('y', margin.top / 2)
-                .text('Methane emissions from 1970-1980');
+                .text('Ground Level Ozone in Bay Area in 2023');
 
             // Add x-axis and label
             container_g
@@ -114,7 +113,7 @@
                 .attr('font-family', 'sans-serif')
                 .attr('font-size', '14px')
                 .attr('fill', '#140431')
-                .text('Location');
+                .text('Month');
 
             // Add y-axis and label
             container_g
@@ -122,13 +121,13 @@
                 .call(d3.axisLeft(yScale))
                 .append('text')
                 .attr('transform', 'rotate(-90)')
-                .attr('y', -70)
-                .attr('x', -height / 2)
+                .attr('y', -120)
+                .attr('x', -height / 2.4)
                 .attr('dy', '1em')
                 .attr('font-family', 'sans-serif')
                 .attr('font-size', '14px')
                 .attr('fill', '#140431')
-                .text('Month');
+                .text('Location');
 
             // Add legend
             svg.append("g")
@@ -136,7 +135,7 @@
                 .attr("transform", "translate(900,40)");
 
             var legendSequential = d3.legendColor()
-                .title("Methane Emissions")
+                .title("Ground level Ozone")
                 .shapeWidth(70)
                 .cells(5)
                 .orient("horizontal")
@@ -158,30 +157,30 @@
                 .style("border-radius", "5px")
                 .style("padding", "5px");
 
-            var mouseover = function (event, d) {
-                tooltip.style("opacity", 1);
-            };
+            // var mouseover = function (event, d) {
+            //     tooltip.style("opacity", 1);
+            // };
 
-            var mousemove = function (event, d) {
-                tooltip
-                    .html("CH4 Emission is: " + d.Ozone)
-                    .style("left", (event.pageX) + "px")
-                    .style("top", (event.pageY) + "px");
-            };
+            // var mousemove = function (event, d) {
+            //     tooltip
+            //         .html("CH4 Emission is: " + d.Ozone)
+            //         .style("left", (event.pageX) + "px")
+            //         .style("top", (event.pageY) + "px");
+            // };
 
-            var mouseleave = function (d) {
-                tooltip.style("opacity", 0);
-            };
+            // var mouseleave = function (d) {
+            //     tooltip.style("opacity", 0);
+            // };
 
             container_g.selectAll()
                 .data(data)
                 .enter()
                 .append('rect')
                 .attr('x', function (d) {
-                    return xScale(d.Zone);
+                    return xScale(d.Month);
                 })
                 .attr('y', function (d) {
-                    return yScale(d.Month);
+                    return yScale(d.Zone);
                 })
                 .attr('width', xScale.bandwidth())
                 .attr('height', yScale.bandwidth())
@@ -189,9 +188,9 @@
                     return heatmapColor(d.Ozone);
                 })
                 .attr('class', 'heatmap-rect')
-                .on("mouseover", mouseover)
-                .on("mousemove", mousemove)
-                .on("mouseleave", mouseleave)
+                // .on("mouseover", mouseover)
+                // .on("mousemove", mousemove)
+                // .on("mouseleave", mouseleave)
 
         });
     </script>
