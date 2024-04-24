@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Multi Line chart</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://colorbrewer2.org/export/colorbrewer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+</head>
+
+<body>
+    <script>
+        var canvasWidth = 900;
+        var canvasHeight = 500;
+        var margin = 200;
+
+        var svg = d3
+            .select('body')
+            .append('svg')
+            .attr('width', canvasWidth)
+            .attr('height', canvasHeight);
+
+        var width = svg.attr('width') - margin;
+        var height = svg.attr('height') - margin;
+
+        svg
+            .append('text')
+            .attr('transform', 'translate(100,0)')
+            .attr('x', 0)
+            .attr('y', 50)
+            .attr('font-size', '24px')
+            .text('Bay Area Quality over the past 10 years');
+
+        var xScale = d3.scaleLinear()
+            .domain([1, 12])
+            .range([0, width]);
+        var yScale = d3.scaleLinear()
+            .domain([0, 200])
+            .range([height, 0]);
+
+
+        var container_g = svg
+            .append('g')
+            .attr(
+                'transform',
+                'translate(' + 100 + ',' + 100 + ')',
+            );
+
+        var monthMap = {
+            "January": 1,
+            "February": 2,
+            "March": 3,
+            "April": 4,
+            "May": 5,
+            "June": 6,
+            "July": 7,
+            "August": 8,
+            "September": 9,
+            "October": 10,
+            "November": 11,
+            "December": 12
+        };
+
+        d3.csv(
+            'https://gist.githubusercontent.com/chansrinivas/73e91e1b5539720f4ce555aad77aa212/raw/ed7c36c871db25cbbfefd4d8c9afc4ad499beb73/bayarea-linechart.csv',
+        ).then((data) => {
+            data.forEach((d) => {
+                d.Month = monthMap[d.Month]; // Convert month name to number
+                for (var country in d) {
+                    if (country !== 'Month' && d.hasOwnProperty(country)) {
+                        d[country] = +d[country];
+                    }
+                }
+            });
+
+            var allValues = data.columns
+                .slice(1)
+                .map((country) => data.map((d) => d[country]))
+                .flat();
+            yScale.domain([
+                d3.min(allValues),
+                d3.max(allValues),
+            ]);
+            var cities = data.columns
+                .slice(1)
+                .map(function (id) {
+                    return {
+                        id: id,
+                        values: data.map(function (d) {
+                            return { Month: d.Month, AQI: d[id] }; // Adjust property names as needed
+                        }),
+                    };
+                });
+
+            var xScale = d3.scaleLinear()
+                .domain([1, 12]) // Adjust domain as needed
+                .range([0, width]);
+
+            var yScale = d3.scaleLinear()
+                .domain([
+                    d3.min(cities, function (c) {
+                        return d3.min(c.values, function (d) {
+                            return d.AQI;
+                        });
+                    }),
+                    d3.max(cities, function (c) {
+                        return d3.max(c.values, function (d) {
+                            return d.AQI;
+                        });
+                    }),
+                ])
+                .range([height, 0]); // Adjust range as needed
+
+            var zScale = d3.scaleOrdinal()
+                .domain(data.columns.slice(1))
+                .range(['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf', '#f7b6d2']); // Specify color range as needed
+
+
+            container_g.selectAll('.line')
+                .data(data.columns.slice(1))
+                .enter()
+                .append('path')
+                .attr('class', 'line')
+                .attr('fill', 'none')
+                .attr('stroke', (d, i) => {
+                    if (d === '2023') return '#F2BC0B';
+                    else if (d === '10-year-average') return 'red';
+                    else return '#d9d9d9'; // Grey for the first 10 years
+                })
+                .attr('stroke-width', (d) => {
+                    if (d === '2023' || d === '10-year-average') return 3.0; // Normal stroke width for red and yellow lines
+                    else return 1.8; // Reduced stroke width for grey lines
+                })
+                .attr('stroke-dasharray', (d) => {
+                    if (d === '10-year-average') return '5,5'; // Define the pattern for the red line (5 units of dash, 5 units of gap)
+                    else return 'none'; // No dash pattern for other lines
+                })
+                .attr('d', (country) =>
+                    d3.line()
+                        .x((d) => xScale(d.Month))
+                        .y((d) => yScale(d[country]))(data),
+                );
+
+
+            container_g.selectAll('.circle-group')
+                .data(data.columns.slice(1))
+                .enter()
+                .append('g')
+                .attr('class', 'circle-group')
+                .each(function (country, i) {
+                    d3.select(this)
+                        .selectAll('.circle')
+                        .data(data)
+                        .enter()
+                        .append('circle')
+                        .attr('class', 'circle')
+                        .attr('cx', (d) => xScale(d.Month))
+                        .attr('cy', (d) => yScale(d[country]))
+                        .attr('r', (d) => {
+                            if (country === '2023' || country === '10-year-average') return 4; // Normal radius for red and yellow lines
+                            else return 3; // Reduced radius for grey lines
+                        })
+                        .style('fill', (d) => {
+                            if (country === '2023') return '#F2BC0B';
+                            else if (country === '10-year-average') return 'red';
+                            else return '#d9d9d9';
+                        })
+                        .style('opacity', 1)
+                        .on('mouseover', function (event, d) {
+                            d3.select(this).attr('r', 8);
+                            showTooltip(d);
+                        })
+                        .on('mouseout', function (event, d) {
+                            d3.select(this).attr('r', 4);
+                            hideTooltip();
+                        });
+
+                    function showTooltip(d) {
+                        container_g.append('text')
+                            .attr('id', 'tooltip')
+                            .attr('x', xScale(d.Month) + 45)
+                            .attr('y', yScale(d[country]) + 40)
+                            .attr('text-anchor', 'middle')
+                            .attr('font-size', '12px')
+                            .attr('font-weight', 'bold')
+                            .attr('fill', 'red')
+                            .text('AQI: ' + d[country]);
+                    }
+
+                    function hideTooltip() {
+                        d3.select('#tooltip').remove();
+                    }
+                });
+
+
+            // Display the X-axis
+            container_g
+                .append('g')
+                .attr('transform', 'translate(0, ' + height + ')')
+                .call(
+                    d3
+                        .axisBottom(xScale)
+                        .tickValues(data.map((d) => d.Month))
+                        .tickFormat(d3.format('d')),
+                )
+                .append('text')
+                .attr('y', height - 255)
+                .attr('x', width - 350)
+                .attr('font-family', 'sans-serif')
+                .attr('font-size', '13px')
+                .attr('fill', 'black')
+                .text('Month');
+
+            // Display the Y-axis
+            container_g
+                .append('g')
+                .call(
+                    d3
+                        .axisLeft(yScale)
+                        .tickFormat(function (d) {
+                            return d;
+                        })
+                        .ticks(12),
+                )
+                .append('text')
+                .attr('transform', 'rotate(-90)')
+                .attr('y', 10)
+                .attr('x', -100)
+                .attr('dy', '-5.1em')
+                .attr('font-family', 'sans-serif')
+                .attr('font-size', '13px')
+                .attr('fill', 'black')
+                .text('Air Quality Index');
+
+            // Add legend
+            svg
+                .append('g')
+                .attr('class', 'legendOrdinal')
+                .attr('transform', 'translate(570,30)');
+
+            var legendOrdinal = d3
+                .legendColor()
+                .title('Country')
+                .shapeWidth(70)
+                .cells(5)
+                .orient('horizontal')
+                .scale(
+                    d3
+                        .scaleOrdinal()
+                        .range(colorScale)
+                        .domain(data.columns.slice(1)),
+                );
+
+            svg
+                .select('.legendOrdinal')
+                .call(legendOrdinal)
+                .selectAll('text')
+                .attr('font-size', '13px');
+
+            function hover(elem) {
+                var attrs = elem.srcElement.attributes;
+                let id = attrs['data-id'].value;
+                let path = city.select('#' + id);
+                if (path.attr('visibility') == 'hidden') {
+                    return z(d.id);
+                }
+                city.selectAll('.line').style('stroke', (d) => {
+                    if (id === d.id.substring(0, 3).toUpperCase()) {
+                        return z(d.id);
+                    } else {
+                        return 'lightgrey';
+                    }
+                });
+            }
+
+            function exit(elem) {
+                var attrs = elem.srcElement.attributes;
+                let id = attrs['data-id'].value;
+                let path = city.select('#' + id);
+                if (path.attr('visibility') == 'hidden') {
+                    return;
+                }
+                city.selectAll('.line').style('stroke', (d) => {
+                    return z(d.id);
+                });
+            }
+
+            // click
+            function click(elem) {
+                var attrs = elem.srcElement.attributes;
+                let id = attrs['data-id'].value;
+                let path = city.select('#' + id);
+                if (path.attr('visibility') == 'visible') {
+                    path.attr('visibility', 'hidden');
+                    return;
+                } else {
+                    path.attr('visibility', 'visible');
+                    city.selectAll('.line').style('stroke', (d) => {
+                        return z(d.id);
+                    });
+                    return;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

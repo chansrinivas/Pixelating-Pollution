@@ -1,46 +1,55 @@
-// <!doctype html>
-// <html lang="en">
+<!doctype html>
+<html lang="en">
 
-// <head>
-//     <meta charset="UTF-8" />
-//     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-//     <title>D3 Heat Map</title>
-//     <style>
-//         body {
-//             font-family: 'Arial', sans-serif;
-//         }
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>D3 Heat Map</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+        }
 
-//         #chart-container {
-//             position: relative;
-//         }
+        #chart-container {
+            position: relative;
+        }
 
-//         .chart-background {
-//             fill: #f0f0f0;
-//         }
+        .chart-background {
+            fill: #f0f0f0;
+        }
 
-//         .heatmap-rect {
-//             stroke: #fff;
-//             stroke-width: 1.2px;
-            
-//         }
+        .heatmap-rect {
+            stroke: #fff;
+            stroke-width: 1.2px;
+        }
 
-//         .chart-label {
-//             font-size: 18px;
-//             font-weight: bold;
-//             fill: #140431;
-//         }
-//     </style>
+        .chart-label {
+            font-size: 18px;
+            font-weight: bold;
+            fill: #140431;
+        }
 
-//     <script src="https://d3js.org/d3.v7.min.js"></script>
-//     <script src="https://d3js.org/d3-scale-chromatic.v2.min.js"></script>
-//     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+        .tooltip {
+            position: absolute;
+            background-color: rgb(255, 255, 255);
+            /* border: solid 2px; */
+            /* border-radius: 5px; */
+            /* padding: 5px; */
+            opacity: 0;
+            font-size: 12px;
+        }
+    </style>
 
-// </head>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
 
-// <body>
-//     <div id="chart-container"></div>
-//     <script>
+</head>
 
+<body>
+    <div id="chart-container"></div>
+    <div id="tooltip" class="tooltip"></div>
+    <script>
         var canvasWidth = 1400;
         var canvasHeight = 500;
         var margin1 = {
@@ -141,20 +150,19 @@
                 .orient("horizontal")
                 .scale(heatmapColor);
 
-                svg1.select(".legendSequential")
+            svg1.select(".legendSequential")
                 .call(legendSequential)
                 .selectAll("text")
                 .attr("font-size", "13px");
 
 
-            var tooltip = d3.select("#chart-container") // Corrected selection
-                .append("div")
+            var tooltip = d3.select("#tooltip")
                 .style("opacity", 0)
                 .attr("class", "tooltip")
                 .style("background-color", "white")
-                .style("border", "solid")
+                // .style("border", "solid")
                 .style("border-width", "2px")
-                .style("border-radius", "5px")
+                // .style("border-radius", "5px")
                 .style("padding", "5px");
 
             var mouseover = function (event, d) {
@@ -165,7 +173,7 @@
                 tooltip
                     .html("CH4 Emission is: " + d.Ozone)
                     .style("left", (event.pageX + 20) + "px")
-                    .style("top", (event.pageY + 20) + "px");
+                    .style("top", (event.pageY - 20) + "px");
             };
 
             var mouseleave = function (d) {
@@ -193,8 +201,7 @@
                 .on("mouseleave", mouseleave)
 
         });
-        
-//     </script>
-// </body>
+    </script>
+</body>
 
-// </html>
+</html>

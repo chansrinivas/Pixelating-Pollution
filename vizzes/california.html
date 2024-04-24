@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>California Choropleth Map</title>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <style>
+        /* Add any custom styles here */
+        path {
+            fill: #ccc; /* Default fill color */
+            stroke: #fff;
+            stroke-width: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <svg id="map" width="960" height="600"></svg>
+
+    <script>
+        // Set up the SVG
+        var svg = d3.select("#map"),
+            width = +svg.attr("width"),
+            height = +svg.attr("height");
+
+        // Sample data values for each county (just for demonstration)
+        var data = {
+            "Alameda": 50,
+            "Contra Costa": 70,
+            "Los Angeles": 90,
+            // Add more data values for other counties as needed
+        };
+
+        // Define the color scale
+        var color = d3.scaleSequential(d3.interpolateBlues)
+            .domain([0, 100]); // Adjust the domain based on your data range
+
+        // Load the GeoJSON file
+        d3.json("https://gist.githubusercontent.com/chansrinivas/166bfa74d14f82284e4edfec66a7e9e6/raw/8d3298de989743e5949ca58bd156c905e762562a/california-counties.geojson").then(function(geojson) {
+            // Define a projection
+            var projection = d3.geoMercator()
+                .fitSize([width, height], geojson);
+
+            // Define a path generator
+            var path = d3.geoPath()
+                .projection(projection);
+
+            // Bind data and create one path per GeoJSON feature
+            svg.selectAll("path")
+                .data(geojson.features)
+                .enter().append("path")
+                .attr("d", path)
+                .attr("fill", function(d) {
+                    // Use the color scale to fill each county based on its data value
+                    var countyName = d.properties.name;
+                    var value = data[countyName];
+                    if (value !== undefined) {
+                        return color(value);
+                    } else {
+                        return "#ccc"; // Default color for missing data
+                    }
+                });
+        });
+    </script>
+</body>
+</html>
