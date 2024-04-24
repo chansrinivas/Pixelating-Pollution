@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,59 +9,65 @@
     <style>
         /* Add any custom styles here */
         path {
-            fill: #ccc; /* Default fill color */
             stroke: #fff;
             stroke-width: 0.5px;
         }
     </style>
 </head>
+
 <body>
     <svg id="map" width="960" height="600"></svg>
 
     <script>
-        // Set up the SVG
         var svg = d3.select("#map"),
             width = +svg.attr("width"),
             height = +svg.attr("height");
 
-        // Sample data values for each county (just for demonstration)
-        var data = {
-            "Alameda": 50,
-            "Contra Costa": 70,
-            "Los Angeles": 90,
-            // Add more data values for other counties as needed
-        };
+        // Load GeoJSON file
+        d3.json("https://gist.githubusercontent.com/chansrinivas/166bfa74d14f82284e4edfec66a7e9e6/raw/8d3298de989743e5949ca58bd156c905e762562a/california-counties.geojson")
+            .then(function (geojson) {
+                // Define projection
+                var projection = d3.geoMercator()
+                    .fitSize([width, height], geojson);
 
-        // Define the color scale
-        var color = d3.scaleSequential(d3.interpolateBlues)
-            .domain([0, 100]); // Adjust the domain based on your data range
+                // Define path generator
+                var path = d3.geoPath()
+                    .projection(projection);
 
-        // Load the GeoJSON file
-        d3.json("https://gist.githubusercontent.com/chansrinivas/166bfa74d14f82284e4edfec66a7e9e6/raw/8d3298de989743e5949ca58bd156c905e762562a/california-counties.geojson").then(function(geojson) {
-            // Define a projection
-            var projection = d3.geoMercator()
-                .fitSize([width, height], geojson);
+                // Load CSV file
+                d3.csv("https://gist.githubusercontent.com/chansrinivas/9ede4262a90ffa1dd4ee68c822d8bba3/raw/7663f5d9567cdde3280032391a8e425987ef496c/aqi-ca.csv").then(function (data) {
+                    // Convert AQI values to numbers
+                    data.forEach(function (d) {
+                        d.AQI = +d.AQI;
+                    });
 
-            // Define a path generator
-            var path = d3.geoPath()
-                .projection(projection);
+                    // Define color scale based on AQI values
+                    var colorScale = d3.scaleSequential()
+                        .interpolator(d3.interpolateRdYlGn) // Change the interpolator function
+                        .domain([90, 5]);
 
-            // Bind data and create one path per GeoJSON feature
-            svg.selectAll("path")
-                .data(geojson.features)
-                .enter().append("path")
-                .attr("d", path)
-                .attr("fill", function(d) {
-                    // Use the color scale to fill each county based on its data value
-                    var countyName = d.properties.name;
-                    var value = data[countyName];
-                    if (value !== undefined) {
-                        return color(value);
-                    } else {
-                        return "#ccc"; // Default color for missing data
-                    }
+                    // Bind data and create one path per GeoJSON feature
+                    svg.selectAll("path")
+                        .data(geojson.features)
+                        .enter().append("path")
+                        .attr("d", path)
+                        .attr("fill", function (d) {
+                            // Match GeoJSON feature with data from CSV file
+                            var countyFIPS = d.properties.County_FIPS_ID; // Assuming FIPS code is used as identifier
+                            var matchingData = data.find(function (d) { return d.FIPS === countyFIPS; });
+                            if (matchingData) {
+                                return colorScale(matchingData.AQI);
+                            } else {
+                                return "#ccc"; // Default color for missing data
+                            }
+                        });
                 });
-        });
+            })
+            .catch(function (error) {
+                console.log("Error loading data:", error);
+            });
+
     </script>
 </body>
+
 </html>
