@@ -119,6 +119,7 @@
 // })
 
 // // <!-- </script> -->
+console.log("Hello")
 const margin = { top: 10, right: 30, bottom: 70, left: 50 },
             width = 860 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
