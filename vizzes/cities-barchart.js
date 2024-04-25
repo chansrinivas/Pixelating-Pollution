@@ -88,7 +88,7 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/3a8ebf18a807d92089111052
         .attr("height", d => height - y(d.value))
         .attr("fill", d => color(d.key))
         .attr("class", d => `bar ${d.key}`) // Add class based on subgroup
-        // Add hover effect
+      
         .on("mouseover", function (event, d) {
             tooltip.transition()
                 .duration(200)
@@ -96,14 +96,15 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/3a8ebf18a807d92089111052
             tooltip.html(`<strong>${d.key}</strong>: ${d.value}`)
                 .style("left", (event.pageX) + "px")
                 .style("top", (event.pageY - 28) + "px");
-            d3.select(this).attr('opacity', 0.5);
+            d3.select(this).attr('opacity', 0.8).attr('fill', 'red');
         })
         .on("mouseout", function (d) {
             tooltip.transition()
                 .duration(500)
                 .style("opacity", 0);
-            d3.select(this).attr('opacity', 1);
+            d3.select(this).attr('opacity', 1).attr('fill', d => color(d.key));
         });
+        
 
     // Add values on top of bars
     svg.append("g")
