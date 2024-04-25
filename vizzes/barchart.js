@@ -66,9 +66,19 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/3a8ebf18a807d92089111052
         .padding([0.05]);
 
     // color palette = one color per subgroup
+    // color palette = shades of green
+    // Define the base color
+    const baseColor = d3.rgb(25, 123, 57);
+
+    // Define the range of shades
+    const shadesRange = d3.range(0, 1, 1 / subgroups.length).map(t => baseColor.brighter(t * 3));
+
+    // Color scale = shades of the provided color
     const color = d3.scaleOrdinal()
         .domain(subgroups)
-        .range(['#7fc97f', '#beaed4', '#fdc086', '#ffff99']);
+        .range(shadesRange);
+
+
 
     // Show the bars
     svg.append("g")

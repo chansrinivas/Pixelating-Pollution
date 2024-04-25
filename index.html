@@ -11,6 +11,47 @@
 		<link rel="stylesheet" href="assets/css/noscript.css" />
 	</noscript>
 </head>
+<style>
+	/* Add any custom styles here */
+	.custom-container {
+            margin: 50px; /* Adjust the margin size as needed */
+            position: relative;
+        }
+
+        .custom-path {
+            stroke: #fff;
+            stroke-width: 0.5px;
+            transition: transform 0.6s;
+        }
+
+        .custom-tooltip {
+            position: absolute;
+            text-align: left;
+            padding: 2px;
+            font: 13px sans-serif;
+            background: rgba(253, 253, 253, 0.0);
+        }
+
+        .custom-legend {
+            position: absolute;
+            top: 20px; /* Adjust top position as needed */
+            right: 500px; /* Adjust right position as needed */
+            font-size: 12px;
+        }
+
+        .custom-legendRect {
+            fill: none;
+            stroke: none;
+        }
+
+        .custom-legendTitle {
+            font-weight: bold;
+            font-size: 14px;
+            text-anchor: middle;
+        }
+
+
+</style>
 
 <body class="is-preload">
 
@@ -30,6 +71,7 @@
 				<li><a href="#first">First Section</a></li>
 				<li><a href="#second">Second Section</a></li>
 				<li><a href="#third">Third Section</a></li>
+				<li><a href="#fourth">Fourth Section</a></li>
 			</ul>
 		</nav>
 
@@ -86,6 +128,17 @@
 				<div id="linechart-container"></div>
 					<p>This Chart shows the analysis of ozone level variations across different geographical zones in the Bay Area in 2023.</p>
 			</section>
+
+			<section id="fourth" class="main special">
+				<header class="major">
+					<h2>Map</h2>
+				</header>
+				<div id="map"></div>
+				<img src="images/calif.png" alt="" width="600" height="600">
+
+				<a href="vizzes/california.html" target=”_blank”>California</a>
+					<p>This Chart shows the analysis of ozone level variations across different geographical zones in the Bay Area in 2023.</p>
+			</section>
 		</div>
 	</div>
 
@@ -100,6 +153,9 @@
 	<script src="https://d3js.org/d3.v7.min.js"></script>
 	<script src="https://colorbrewer2.org/export/colorbrewer.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+
+	<script src="vizzes/california.js"></script>
+	<script src="https://d3js.org/d3.v7.min.js"></script>
 
 
 	<script src="assets/js/jquery.min.js"></script>

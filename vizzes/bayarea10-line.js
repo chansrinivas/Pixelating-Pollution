@@ -43,7 +43,7 @@ var h = canvasHeight - m;
 
 s
     .append('text')
-    .attr('transform', 'translate(390,530)')
+    .attr('transform', 'translate(355,530)')
     .attr('x', 0)
     .attr('y', 50)
     .attr('font-size', '24px')
