@@ -168,7 +168,7 @@
                 console.log(event.pageX)
                 console.log(event.pageY)
                 tooltip
-                    .html("CH4 Emission is: " + d.Ozone)
+                    .html("Ozone value: " + d.Ozone)
                     .style("left", (event.pageX + 20) + "px")
                     .style("top", (event.pageY - 20) + "px");
             };
