@@ -48,11 +48,12 @@ d3.json("https://gist.githubusercontent.com/chansrinivas/166bfa74d14f82284e4edfe
                     }
                 })
                 .on("mouseover", function (event, d) {
+                    console.log("x: ", event.pageX)
                     d3.select(this).raise().transition().duration(100).attr("transform", "scale(1.06)");
                     div
                         .html(`County: ${d.properties.CountyName}`)
-                        .style('left', (event.pageX) + 'px')
-                        .style('top', (event.pageY + 20) + 'px')
+                        .style('left', 40 + 'px')
+                        .style('top', 130 + 'px')
                         .style('opacity', 1);
                 })
                 .on("mouseout", function () {
@@ -62,37 +63,37 @@ d3.json("https://gist.githubusercontent.com/chansrinivas/166bfa74d14f82284e4edfe
 
             // Create legend
             // Create legend
-var legendData = [5, 20, 35, 50, 65, 80, 90]; // Adjust legend values as needed
-var legend = d3.select("#legend")
-    .append("svg")
-    .attr("width", 410) // Adjust the width to accommodate horizontal legend
-    .attr("height", 100); // Adjust the height as needed
+            var legendData = [5, 20, 35, 50, 65, 80, 90]; // Adjust legend values as needed
+            var legend = d3.select("#legend")
+                .append("svg")
+                .attr("width", 410) // Adjust the width to accommodate horizontal legend
+                .attr("height", 100); // Adjust the height as needed
 
-// Add legend title
-legend.append("text")
-    .attr("class", "legendTitle")
-    .attr("x", 1)
-    .attr("y", 15)
-    .text("AQI Index");
+            // Add legend title
+            legend.append("text")
+                .attr("class", "legendTitle")
+                .attr("x", 1)
+                .attr("y", 15)
+                .text("AQI Index");
 
-legend.selectAll(".legendRect")
-    .data(legendData)
-    .enter().append("rect")
-    .attr("class", "legendRect")
-    .attr("x", function (d, i) { return i * 50; }) // Adjust the spacing between legend items
-    .attr("y", 20)
-    .attr("width", 40)
-    .attr("height", 15)
-    .style("fill", function (d) { return colorScale(d); });
+            legend.selectAll(".legendRect")
+                .data(legendData)
+                .enter().append("rect")
+                .attr("class", "legendRect")
+                .attr("x", function (d, i) { return i * 50; }) // Adjust the spacing between legend items
+                .attr("y", 20)
+                .attr("width", 40)
+                .attr("height", 15)
+                .style("fill", function (d) { return colorScale(d); });
 
-legend.selectAll(".legendText")
-    .data(legendData)
-    .enter().append("text")
-    .attr("class", "legendText")
-    .attr("x", function (d, i) { return i * 50 + 15; }) // Adjust the spacing between legend items and the text position
-    .attr("y", 55)
-    .text(function (d) { return d; });
-            });
+            legend.selectAll(".legendText")
+                .data(legendData)
+                .enter().append("text")
+                .attr("class", "legendText")
+                .attr("x", function (d, i) { return i * 50 + 15; }) // Adjust the spacing between legend items and the text position
+                .attr("y", 55)
+                .text(function (d) { return d; });
+        });
     })
     .catch(function (error) {
         console.log("Error loading data:", error);
