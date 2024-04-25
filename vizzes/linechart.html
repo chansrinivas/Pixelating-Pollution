@@ -113,6 +113,12 @@
                 )
                 .on('mouseover', function (event, d) {
                     d3.select(this).attr('stroke', 'green');
+                    var coordinates = d3.pointer(event);
+                    var xPosition = coordinates[0];
+                    var yPosition = coordinates[1];
+                    var dataIndex = Math.round(xScale.invert(xPosition));
+                    var tooltipData = data[dataIndex];
+                    showTooltip(tooltipData, d);
                 })
                 .on('mouseout', function (event, d) {
                     d3.select(this).attr('stroke', (d, i) => {
@@ -120,66 +126,31 @@
                         else if (d === '10-year-average') return 'red';
                         else return '#d9d9d9';
                     });
+                    hideTooltip();
                 });
 
 
-            container_g.selectAll('.circle-group')
-                .data(data.columns.slice(1))
-                .enter()
-                .append('g')
-                .attr('class', 'circle-group')
-                .each(function (country, i) {
-                    d3.select(this)
-                        .selectAll('.circle')
-                        .data(data)
-                        .enter()
-                        .append('circle')
-                        .attr('class', 'circle')
-                        .attr('cx', (d) => xScale(monthNames[d.Month - 1])) // Adjust x-coordinate for month names
-                        .attr('cy', (d) => yScale(d[country]))
-                        .attr('r', (d) => {
-                            if (country === '2023' || country === '10-year-average') return 0.1; // Normal radius for red and yellow lines
-                            else return 0.1; // Reduced radius for grey lines
-                        })
-                        .style('fill', (d) => {
-                            if (country === '2023') return '#F2BC0B';
-                            else if (country === '10-year-average') return 'red';
-                            else return '#d9d9d9';
-                        })
-                        .style('opacity', 1)
-                        .on('mouseover', function (event, d) {
-                            d3.select(this).attr('r', 0.1);
-                            showTooltip(d, country); // Pass the country as an argument
-                        })
+            function showTooltip(d, country) {
+                var tooltip = container_g.append('g')
+                    .attr('id', 'tooltip')
+                    .attr('transform', 'translate(' + (xScale(monthNames[d.Month - 1]) + 45) + ',' + (yScale(d[country]) + 40) + ')');
 
-                        .on('mouseout', function (event, d) {
-                            d3.select(this).attr('r', 0.1);
-                            hideTooltip();
-                        });
+                tooltip.append('text')
+                    .attr('font-size', '12px')
+                    .attr('font-weight', 'bold')
+                    .attr('fill', 'black')
+                    .text('AQI: ' + d[country]);
 
-                    function showTooltip(d, country) {
-                        var tooltip = container_g.append('g')
-                            .attr('id', 'tooltip')
-                            .attr('transform', 'translate(' + (xScale(monthNames[d.Month - 1]) + 45) + ',' + (yScale(d[country]) + 40) + ')');
+                tooltip.append('text')
+                    .attr('dy', '1.2em') // Adjust dy for the second line to create line spacing
+                    .attr('font-size', '12px')
+                    .attr('fill', 'black')
+                    .text('Year: ' + country); // Show the year
+            }
 
-                        tooltip.append('text')
-                            .attr('font-size', '12px')
-                            .attr('font-weight', 'bold')
-                            .attr('fill', 'black')
-                            .text('AQI: ' + d[country]);
-
-                        tooltip.append('text')
-                            .attr('dy', '1.2em') // Adjust dy for the second line to create line spacing
-                            .attr('font-size', '12px')
-                            .attr('fill', 'black')
-                            .text('Year: ' + country); // Show the year
-                    }
-
-                    function hideTooltip() {
-                        d3.select('#tooltip').remove();
-                    }
-                });
-
+            function hideTooltip() {
+                d3.select('#tooltip').remove();
+            }
 
             // Display the X-axis
             container_g

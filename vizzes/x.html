@@ -12,8 +12,8 @@
 
 <body>
     <script>
-        var canvasWidth = 900;
-        var canvasHeight = 500;
+         var canvasWidth = 1200;
+        var canvasHeight = 600;
         var margin = 200;
 
         var svg = d3
@@ -27,7 +27,7 @@
 
         svg
             .append('text')
-            .attr('transform', 'translate(100,0)')
+            .attr('transform', 'translate(390,530)')
             .attr('x', 0)
             .attr('y', 50)
             .attr('font-size', '24px')
@@ -207,30 +207,22 @@
                 .attr('fill', 'black')
                 .text('Air Quality Index');
 
-            // Add legend
-            svg
-                .append('g')
-                .attr('class', 'legendOrdinal')
-                .attr('transform', 'translate(570,30)');
-
-            var legendOrdinal = d3
-                .legendColor()
-                .title('Country')
-                .shapeWidth(70)
-                .cells(5)
-                .orient('horizontal')
-                .scale(
-                    d3
-                        .scaleOrdinal()
-                        .range(colorScale)
-                        .domain(data.columns.slice(1)),
+           // Add legend
+           var legend = svg.append('g')
+                .attr('class', 'legend')
+                .attr('transform', 'translate(190,20)')
+                .attr('font-size', '12px')
+                .call(d3.legendColor()
+                    .shape('rect')
+                    .shapeWidth(30)
+                    .shapeHeight(8)
+                    .shapePadding(35)
+                    .orient('horizontal')
+                    .scale(d3.scaleOrdinal()
+                        .domain(data.columns.slice(1))
+                        .range(['#d9d9d9', '#d9d9d9', '#d9d9d9', '#d9d9d9', '#d9d9d9', '#d9d9d9', '#d9d9d9', '#d9d9d9', '#d9d9d9', '#d9d9d9', '#F2BC0B', 'red'])
+                    )
                 );
-
-            svg
-                .select('.legendOrdinal')
-                .call(legendOrdinal)
-                .selectAll('text')
-                .attr('font-size', '13px');
 
 
             container_g.selectAll('.line')
