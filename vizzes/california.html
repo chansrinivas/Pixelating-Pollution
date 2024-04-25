@@ -8,20 +8,43 @@
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <style>
         /* Add any custom styles here */
+        .container {
+            margin: 30px; /* Adjust the margin size as needed */
+        }
+
         path {
             stroke: #fff;
             stroke-width: 0.5px;
+            transition: transform 0.6s;
+            /* Add smooth transition effect */
+        }
+
+        .tooltip {
+            position: absolute;
+            text-align: left;
+            padding: 2px;
+            font: 13px sans-serif;
+            background: rgba(253, 253, 253, 0.0);
         }
     </style>
 </head>
 
 <body>
-    <svg id="map" width="960" height="600"></svg>
+    <div class="container">
+        <svg id="map" width="960" height="700"></svg>
+        <div id="tooltip" class="tooltip"></div>
+    </div>
 
     <script>
         var svg = d3.select("#map"),
             width = +svg.attr("width"),
             height = +svg.attr("height");
+
+        var div = d3
+            .select('.container') // Select the container div instead of 'body'
+            .append('div')
+            .attr('class', 'tooltip')
+            .style('opacity', 0);
 
         // Load GeoJSON file
         d3.json("https://gist.githubusercontent.com/chansrinivas/166bfa74d14f82284e4edfec66a7e9e6/raw/8d3298de989743e5949ca58bd156c905e762562a/california-counties.geojson")
@@ -60,6 +83,24 @@
                             } else {
                                 return "#ccc"; // Default color for missing data
                             }
+                        })
+                        .on("mouseover", function (event, d) {
+                            console.log(d3.event.pageX);
+                            console.log(d3.event.pageY);
+                            d3.select(this).raise().transition().duration(100).attr("transform", "scale(1.06)");
+                            div
+                                .html(
+                                    `County: ${event.properties.CountyName} `,
+                                )
+                                .style('left', (d3.event.pageX) + 'px')
+                                .style('top',(d3.event.pageY - 28) + 'px')
+                                .style('opacity', 1) // Make the tooltip visible
+                                .style('visibility', 'visible'); // Make the tooltip visible
+                        })
+                        .on("mouseout", function () {
+                            // Reset the scale on mouseout
+                            d3.select(this).transition().duration(100).attr("transform", "scale(1)");
+                            div.style('visibility', 'hidden'); // Hide the tooltip on mouseout
                         });
                 });
             })
