@@ -1,4 +1,4 @@
-// <!doctype html>
+// <!-- <!doctype html>
 // <html lang="en">
 
 // <head>
@@ -14,6 +14,7 @@
 //             position: relative;
 //         }
 
+
 //         .chart-background {
 //             fill: #f0f0f0;
 //         }
@@ -21,7 +22,7 @@
 //         .heatmap-rect {
 //             stroke: #fff;
 //             stroke-width: 1.2px;
-            
+
 //         }
 
 //         .chart-label {
@@ -39,7 +40,7 @@
 
 // <body>
 //     <div id="chart-container"></div>
-//     <script>
+//     <script> -->
 
         var canvasWidth = 1400;
         var canvasHeight = 500;
@@ -141,7 +142,7 @@
                 .orient("horizontal")
                 .scale(heatmapColor);
 
-                svg1.select(".legendSequential")
+            svg1.select(".legendSequential")
                 .call(legendSequential)
                 .selectAll("text")
                 .attr("font-size", "13px");
@@ -151,21 +152,25 @@
                 .append("div")
                 .style("opacity", 0)
                 .attr("class", "tooltip")
+                .style("position", "absolute") // Set position to absolute
                 .style("background-color", "white")
-                .style("border", "solid")
                 .style("border-width", "2px")
-                .style("border-radius", "5px")
-                .style("padding", "5px");
+                .style("padding", "5px")
+                .style("font-size", "12px")
+                .style("pointer-events", "none"); // Make sure tooltip doesn't block mouse events
+
 
             var mouseover = function (event, d) {
                 tooltip.style("opacity", 1);
             };
 
             var mousemove = function (event, d) {
+                console.log(event.pageX)
+                console.log(event.pageY)
                 tooltip
                     .html("CH4 Emission is: " + d.Ozone)
                     .style("left", (event.pageX + 20) + "px")
-                    .style("top", (event.pageY + 20) + "px");
+                    .style("top", (event.pageY - 20) + "px");
             };
 
             var mouseleave = function (d) {
@@ -193,7 +198,7 @@
                 .on("mouseleave", mouseleave)
 
         });
-        
+
 //     </script>
 // </body>
 

@@ -5,18 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>California Choropleth Map</title>
-    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         /* Add any custom styles here */
         .container {
-            margin: 30px; /* Adjust the margin size as needed */
+            margin: 50px; /* Adjust the margin size as needed */
+            position: relative;
         }
 
         path {
             stroke: #fff;
             stroke-width: 0.5px;
             transition: transform 0.6s;
-            /* Add smooth transition effect */
         }
 
         .tooltip {
@@ -26,22 +26,41 @@
             font: 13px sans-serif;
             background: rgba(253, 253, 253, 0.0);
         }
+
+        .legend {
+            position: absolute;
+            top: 20px; /* Adjust top position as needed */
+            right: 500px; /* Adjust right position as needed */
+            font-size: 12px;
+        }
+
+        .legendRect {
+            fill: none;
+            stroke: none;
+        }
+
+        .legendTitle {
+            font-weight: bold;
+            font-size: 14px;
+            text-anchor: middle;
+        }
+
     </style>
 </head>
 
 <body>
     <div class="container">
-        <svg id="map" width="960" height="700"></svg>
+        <svg id="map" width="960" height="600"></svg>
         <div id="tooltip" class="tooltip"></div>
+        <div id="legend" class="legend"></div> <!-- Add a div for the legend -->
     </div>
-
     <script>
         var svg = d3.select("#map"),
             width = +svg.attr("width"),
             height = +svg.attr("height");
 
         var div = d3
-            .select('.container') // Select the container div instead of 'body'
+            .select('.container')
             .append('div')
             .attr('class', 'tooltip')
             .style('opacity', 0);
@@ -65,8 +84,7 @@
                     });
 
                     // Define color scale based on AQI values
-                    var colorScale = d3.scaleSequential()
-                        .interpolator(d3.interpolateRdYlGn) // Change the interpolator function
+                    var colorScale = d3.scaleSequential(d3.interpolateRdYlGn)
                         .domain([90, 5]);
 
                     // Bind data and create one path per GeoJSON feature
@@ -76,7 +94,7 @@
                         .attr("d", path)
                         .attr("fill", function (d) {
                             // Match GeoJSON feature with data from CSV file
-                            var countyFIPS = d.properties.County_FIPS_ID; // Assuming FIPS code is used as identifier
+                            var countyFIPS = d.properties.County_FIPS_ID;
                             var matchingData = data.find(function (d) { return d.FIPS === countyFIPS; });
                             if (matchingData) {
                                 return colorScale(matchingData.AQI);
@@ -85,23 +103,50 @@
                             }
                         })
                         .on("mouseover", function (event, d) {
-                            console.log(d3.event.pageX);
-                            console.log(d3.event.pageY);
                             d3.select(this).raise().transition().duration(100).attr("transform", "scale(1.06)");
                             div
-                                .html(
-                                    `County: ${event.properties.CountyName} `,
-                                )
-                                .style('left', (d3.event.pageX) + 'px')
-                                .style('top',(d3.event.pageY - 28) + 'px')
-                                .style('opacity', 1) // Make the tooltip visible
-                                .style('visibility', 'visible'); // Make the tooltip visible
+                                .html(`County: ${d.properties.CountyName}`)
+                                .style('left', (event.pageX) + 'px')
+                                .style('top', (event.pageY + 20) + 'px')
+                                .style('opacity', 1);
                         })
                         .on("mouseout", function () {
-                            // Reset the scale on mouseout
                             d3.select(this).transition().duration(100).attr("transform", "scale(1)");
-                            div.style('visibility', 'hidden'); // Hide the tooltip on mouseout
+                            div.style('opacity', 0);
                         });
+
+                    // Create legend
+                    var legendData = [5, 20, 35, 50, 65, 80, 90]; // Adjust legend values as needed
+                    var legend = d3.select("#legend")
+                        .append("svg")
+                        .attr("width", 120)
+                        .attr("height", 200);
+
+                    // Add legend title
+                    legend.append("text")
+                        .attr("class", "legendTitle")
+                        .attr("x", 38)
+                        .attr("y", 10)
+                        .text("AQI Index");
+
+                    legend.selectAll(".legendRect")
+                        .data(legendData)
+                        .enter().append("rect")
+                        .attr("class", "legendRect")
+                        .attr("x", 10)
+                        .attr("y", function (d, i) { return i * 20 + 20; })
+                        .attr("width", 20)
+                        .attr("height", 20)
+                        .style("fill", function (d) { return colorScale(d); });
+
+                    legend.selectAll(".legendText")
+                        .data(legendData)
+                        .enter().append("text")
+                        .attr("class", "legendText")
+                        .attr("x", 40)
+                        .attr("y", function (d, i) { return i * 20 + 35; })
+                        .text(function (d) { return d; });
+
                 });
             })
             .catch(function (error) {
