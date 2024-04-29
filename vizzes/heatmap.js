@@ -59,8 +59,8 @@
 
 
         var width1 = 650;
-        //canvasWidth - margin1.left - margin1.right;
-        // console.log("Width: ",width1)
+        // canvasWidth - margin1.left - margin1.right;
+     
         var height1 = canvasHeight - margin1.top - margin1.bottom;
 
         var yScale = d3
@@ -74,8 +74,8 @@
 
         var heatmapColor = d3
             .scaleSequential()
-            .interpolator(d3.interpolateRdYlGn) // Using a green-to-red color scale
-            .domain([140, 20]); // Reversed domain to have green for lower values and red for higher values
+            .interpolator(d3.interpolateRdYlGn) 
+            .domain([140, 20]); 
 
 
         var container_g = svg1
@@ -136,10 +136,11 @@
             svg1.append("g")
                 .attr("class", "legendSequential")
                 .attr("transform", "translate(130,440)");
+                // .attr("width", 900)
 
             var legendSequential = d3.legendColor()
                 .title("Ground level Ozone")
-                .shapeWidth(70)
+                .shapeWidth(137)
                 .cells(5)
                 .orient("horizontal")
                 .scale(heatmapColor);

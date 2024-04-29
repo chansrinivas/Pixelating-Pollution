@@ -68,7 +68,6 @@ d3.json("https://gist.githubusercontent.com/chansrinivas/166bfa74d14f82284e4edfe
                 .attr("width", 410) 
                 .attr("height", 100); 
 
-            // Add legend title
             legend.append("text")
                 .attr("class", "legendTitle")
                 .attr("x", 1)
@@ -79,7 +78,7 @@ d3.json("https://gist.githubusercontent.com/chansrinivas/166bfa74d14f82284e4edfe
                 .data(legendData)
                 .enter().append("rect")
                 .attr("class", "legendRect")
-                .attr("x", function (d, i) { return i * 50; }) // Adjust the spacing between legend items
+                .attr("x", function (d, i) { return i * 50; }) 
                 .attr("y", 20)
                 .attr("width", 40)
                 .attr("height", 15)
@@ -89,7 +88,7 @@ d3.json("https://gist.githubusercontent.com/chansrinivas/166bfa74d14f82284e4edfe
                 .data(legendData)
                 .enter().append("text")
                 .attr("class", "legendText")
-                .attr("x", function (d, i) { return i * 50 + 15; }) // Adjust the spacing between legend items and the text position
+                .attr("x", function (d, i) { return i * 50 + 15; }) 
                 .attr("y", 55)
                 .text(function (d) { return d; });
         });

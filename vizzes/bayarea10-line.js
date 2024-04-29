@@ -18,28 +18,15 @@ var canvasWidth = 1000;
 var canvasHeight = 600;
 var m = 200;
 
-// Select the container element with ID linechart-container
 var container = d3.select('#linechart-container');
 
-// Append an SVG element to the container
 var s = container
     .append('svg')
     .attr('width', canvasWidth)
     .attr('height', canvasHeight);
 
-// Calculate width and height after accounting for margin
 var w = canvasWidth - m;
 var h = canvasHeight - m;
-
-// var s = d3
-//     .select('#linechart-container')
-//     .select('body')
-//     .append('svg')
-//     .attr('width', canvasWidth)
-//     .attr('height', canvasHeight);
-
-// var w = s.attr('width') - m;
-// var h = s.attr('height') - m;
 
 s
     .append('text')
@@ -110,15 +97,15 @@ d3.csv(
         .attr('stroke', (d, i) => {
             if (d === '2023') return '#F2BC0B';
             else if (d === '10-year-average') return 'red';
-            else return '#d9d9d9'; // Grey for the first 10 years
+            else return '#d9d9d9'; 
         })
         .attr('stroke-width', (d) => {
-            if (d === '2023' || d === '10-year-average') return 2.8; // Normal stroke width for red and yellow lines
-            else return 1.8; // Reduced stroke width for grey lines
+            if (d === '2023' || d === '10-year-average') return 2.8;
+            else return 1.8; 
         })
         .attr('stroke-dasharray', (d) => {
-            if (d === '10-year-average') return '4,4'; // Define the pattern for the red line (5 units of dash, 5 units of gap)
-            else return 'none'; // No dash pattern for other lines
+            if (d === '10-year-average') return '4,4'; 
+            else return 'none'; 
         })
         .attr('d', (country) =>
             d3.line()
@@ -142,8 +129,8 @@ d3.csv(
                 .attr('cx', (d) => xScale(d.Month))
                 .attr('cy', (d) => yScale(d[country]))
                 .attr('r', (d) => {
-                    if (country === '2023' || country === '10-year-average') return 4; // Normal radius for red and yellow lines
-                    else return 3; // Reduced radius for grey lines
+                    if (country === '2023' || country === '10-year-average') return 4; 
+                    else return 3; 
                 })
                 .style('fill', (d) => {
                     if (country === '2023') return '#F2BC0B';
@@ -172,7 +159,7 @@ d3.csv(
                     .text('AQI: ' + d[country]);
 
                 tooltip.append('text')
-                    .attr('dy', '1.2em') // Adjust dy for the second line to create line spacing
+                    .attr('dy', '1.2em') 
                     .attr('font-size', '12px')
                     .attr('fill', 'black')
                     .text('Month: ' + d.Month);
@@ -184,7 +171,6 @@ d3.csv(
         });
 
 
-    // Display the X-axis
     container_g
         .append('g')
         .attr('transform', 'translate(0, ' + h + ')')
@@ -202,7 +188,6 @@ d3.csv(
         .attr('fill', 'black')
         .text('Month');
 
-    // Display the Y-axis
     container_g
         .append('g')
         .call(
@@ -223,7 +208,6 @@ d3.csv(
         .attr('fill', 'black')
         .text('Air Quality Index');
 
-    // Add legend
     var legend = s.append('g')
         .attr('class', 'legend')
         .attr('transform', 'translate(130,20)')
@@ -246,14 +230,12 @@ d3.csv(
             var clickedLine = d3.select(this);
             var isActive = clickedLine.classed('active');
 
-            // Reset all lines to default color
             container_g.selectAll('.line').classed('active', false).attr('stroke', (d, i) => {
                 if (d === '2023') return '#F2BC0B';
                 else if (d === '10-year-average') return 'red';
                 else return '#d9d9d9';
             });
 
-            // Highlight clicked line in blue if it's not active, otherwise reset color
             if (!isActive) {
                 clickedLine.classed('active', true).attr('stroke', 'blue');
             } else {
