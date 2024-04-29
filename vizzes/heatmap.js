@@ -42,7 +42,7 @@
 //     <div id="chart-container"></div>
 //     <script> -->
 
-        var canvasWidth = 1400;
+        var canvasWidth = 1000;
         var canvasHeight = 500;
         var margin1 = {
             top: 50,
@@ -58,7 +58,9 @@
             .attr('height', canvasHeight);
 
 
-        var width1 = canvasWidth - margin1.left - margin1.right;
+        var width1 = 650;
+        //canvasWidth - margin1.left - margin1.right;
+        // console.log("Width: ",width1)
         var height1 = canvasHeight - margin1.top - margin1.bottom;
 
         var yScale = d3
@@ -114,7 +116,7 @@
                 .attr('font-family', 'sans-serif')
                 .attr('font-size', '14px')
                 .attr('fill', '#140431')
-                .text('Month');
+                // .text('Month');
 
             // Add y-axis and label
             container_g
@@ -128,7 +130,7 @@
                 .attr('font-family', 'sans-serif')
                 .attr('font-size', '14px')
                 .attr('fill', '#140431')
-                .text('Location');
+                // .text('Location');
 
             // Add legend
             svg1.append("g")
