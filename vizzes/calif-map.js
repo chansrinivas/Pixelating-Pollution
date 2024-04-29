@@ -10,48 +10,48 @@ var div = d3
     .attr('class', 'tooltip')
     .style('opacity', 0);
 
-// Load GeoJSON file
 d3.json("https://gist.githubusercontent.com/chansrinivas/166bfa74d14f82284e4edfec66a7e9e6/raw/8d3298de989743e5949ca58bd156c905e762562a/california-counties.geojson")
     .then(function (geojson) {
-        // Define projection
         var projection = d3.geoMercator()
             .fitSize([widthMap, heightMap], geojson);
 
-        // Define path generator
         var path = d3.geoPath()
             .projection(projection);
 
-        // Load CSV file
         d3.csv("https://gist.githubusercontent.com/chansrinivas/9ede4262a90ffa1dd4ee68c822d8bba3/raw/7663f5d9567cdde3280032391a8e425987ef496c/aqi-ca.csv").then(function (data) {
-            // Convert AQI values to numbers
             data.forEach(function (d) {
                 d.AQI = +d.AQI;
             });
 
-            // Define color scale based on AQI values
             var colorScale = d3.scaleSequential(d3.interpolateRdYlGn)
                 .domain([90, 5]);
 
-            // Bind data and create one path per GeoJSON feature
             svgMap.selectAll("path")
                 .data(geojson.features)
                 .enter().append("path")
                 .attr("d", path)
                 .attr("fill", function (d) {
-                    // Match GeoJSON feature with data from CSV file
                     var countyFIPS = d.properties.County_FIPS_ID;
                     var matchingData = data.find(function (d) { return d.FIPS === countyFIPS; });
                     if (matchingData) {
                         return colorScale(matchingData.AQI);
                     } else {
-                        return "#ccc"; // Default color for missing data
+                        return "#ccc"; 
                     }
                 })
                 .on("mouseover", function (event, d) {
                     console.log("x: ", event.pageX)
-                    d3.select(this).raise().transition().duration(100).attr("transform", "scale(1.06)");
+                    var countyFIPS = d.properties.County_FIPS_ID;
+                    var matchingData = data.find(function (d) { return d.FIPS === countyFIPS; });
+                    if (matchingData) {
+                        console.log(matchingData.AQI);
+                    } else {
+                        console.log("None"); 
+                    }
+
+                    d3.select(this).raise().transition().duration(100).attr("transform", "scale(1.03)");
                     div
-                        .html(`County: ${d.properties.CountyName}`)
+                        .html(`County: ${d.properties.CountyName} <br> AQI: ${matchingData.AQI}`)
                         .style('left', 40 + 'px')
                         .style('top', 130 + 'px')
                         .style('opacity', 1);
@@ -61,13 +61,12 @@ d3.json("https://gist.githubusercontent.com/chansrinivas/166bfa74d14f82284e4edfe
                     div.style('opacity', 0);
                 });
 
-            // Create legend
-            // Create legend
-            var legendData = [5, 20, 35, 50, 65, 80, 90]; // Adjust legend values as needed
+            
+            var legendData = [5, 20, 35, 50, 65, 80, 90];
             var legend = d3.select("#legend")
                 .append("svg")
-                .attr("width", 410) // Adjust the width to accommodate horizontal legend
-                .attr("height", 100); // Adjust the height as needed
+                .attr("width", 410) 
+                .attr("height", 100); 
 
             // Add legend title
             legend.append("text")
