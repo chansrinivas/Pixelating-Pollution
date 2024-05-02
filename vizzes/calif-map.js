@@ -52,8 +52,8 @@ d3.json("https://gist.githubusercontent.com/chansrinivas/166bfa74d14f82284e4edfe
                     d3.select(this).raise().transition().duration(100).attr("transform", "scale(1.03)");
                     div
                         .html(`County: ${d.properties.CountyName} <br> AQI: ${matchingData.AQI}`)
-                        .style('left', 40 + 'px')
-                        .style('top', 130 + 'px')
+                        .style('left',(event.pageX + 40) + 'px')
+                        .style('top', (event.pageY - 130) + 'px')
                         .style('opacity', 1);
                 })
                 .on("mouseout", function () {
