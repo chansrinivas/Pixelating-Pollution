@@ -49,7 +49,7 @@ d3.json("https://gist.githubusercontent.com/chansrinivas/166bfa74d14f82284e4edfe
                         console.log("None"); 
                     }
 
-                    d3.select(this).raise().transition().duration(100).attr("transform", "scale(1.03)");
+                    d3.select(this).raise().transition().duration(100).attr("transform", "scale(1.02)");
                     div
                         .html(`County: ${d.properties.CountyName} <br> AQI: ${matchingData.AQI}`)
                         .style('left',(event.pageX + 40) + 'px')
