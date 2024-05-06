@@ -42,165 +42,157 @@
 //     <div id="chart-container"></div>
 //     <script> -->
 
-        var canvasWidth = 1000;
-        var canvasHeight = 500;
-        var margin1 = {
-            top: 50,
-            right: 600,
-            bottom: 150,
-            left: 150,
-        };
+var canvasWidth = 1000;
+var canvasHeight = 500;
+var margin1 = {
+    top: 50,
+    right: 600,
+    bottom: 150,
+    left: 150,
+};
 
-        var svg1 = d3
-            .select('#chart-container')
-            .append('svg')
-            .attr('width', canvasWidth)
-            .attr('height', canvasHeight);
-
-
-        var width1 = 650;
-        // canvasWidth - margin1.left - margin1.right;
-     
-        var height1 = canvasHeight - margin1.top - margin1.bottom;
-
-        var yScale = d3
-            .scaleBand()
-            .range([0, height1])
-            .padding(0.03);
-        var xScale = d3
-            .scaleBand()
-            .range([0, width1])
-            .padding(0.05);
-
-        var heatmapColor = d3
-            .scaleSequential()
-            .interpolator(d3.interpolateRdYlGn) 
-            .domain([140, 20]); 
+var svg1 = d3
+    .select('#chart-container')
+    .append('svg')
+    .attr('width', canvasWidth)
+    .attr('height', canvasHeight);
 
 
-        var container_g = svg1
-            .append('g')
-            .attr('transform', 'translate(' + margin1.left + ',' + margin1.top + ')',);
+var width1 = 650;
+// canvasWidth - margin1.left - margin1.right;
 
-        d3.csv(
-            'https://gist.githubusercontent.com/chansrinivas/fd27e6043da02a8bde32d72a8440dd32/raw/00f25153eb2f1c10f1b653993c54cfb086605c4e/ozone.csv',
-        ).then((data) => {
-            yScale.domain(
-                data.map(function (d) {
-                    return d.Zone;
-                }),
-            );
+var height1 = canvasHeight - margin1.top - margin1.bottom;
 
-            xScale.domain(
-                data.map(function (d) {
-                    return d.Month;
-                }),
-            );
+var yScale = d3
+    .scaleBand()
+    .range([0, height1])
+    .padding(0.03);
+var xScale = d3
+    .scaleBand()
+    .range([0, width1])
+    .padding(0.05);
 
-            // Add chart title
-            svg1
-                .append('text')
-                .attr('class', 'chart-label')
-                .attr('x', canvasWidth / 4.6)
-                .attr('y', margin1.top / 2)
-                .text('Ground Level Ozone in Bay Area in 2023');
-
-            // Add x-axis and label
-            container_g
-                .append('g')
-                .attr('transform', 'translate(0, ' + height1 + ')')
-                .call(d3.axisBottom(xScale))
-                .append('text')
-                .attr('y', 45)
-                .attr('x', width1 / 2)
-                .attr('font-family', 'sans-serif')
-                .attr('font-size', '14px')
-                .attr('fill', '#140431')
-                // .text('Month');
-
-            // Add y-axis and label
-            container_g
-                .append('g')
-                .call(d3.axisLeft(yScale))
-                .append('text')
-                .attr('transform', 'rotate(-90)')
-                .attr('y', -120)
-                .attr('x', -height1 / 2.4)
-                .attr('dy', '1em')
-                .attr('font-family', 'sans-serif')
-                .attr('font-size', '14px')
-                .attr('fill', '#140431')
-                // .text('Location');
-
-            // Add legend
-            svg1.append("g")
-                .attr("class", "legendSequential")
-                .attr("transform", "translate(130,440)");
-                // .attr("width", 900)
-
-            var legendSequential = d3.legendColor()
-                .title("Ground level Ozone")
-                .shapeWidth(137)
-                .cells(5)
-                .orient("horizontal")
-                .scale(heatmapColor);
-
-            svg1.select(".legendSequential")
-                .call(legendSequential)
-                .selectAll("text")
-                .attr("font-size", "13px");
+var heatmapColor = d3
+    .scaleSequential()
+    .interpolator(d3.interpolateRdYlGn)
+    .domain([140, 20]);
 
 
-            var tooltip = d3.select("#chart-container") // Corrected selection
-                .append("div")
-                .style("opacity", 0)
-                .attr("class", "tooltip")
-                .style("position", "absolute") // Set position to absolute
-                .style("background-color", "white")
-                .style("border-width", "2px")
-                .style("padding", "5px")
-                .style("font-size", "12px")
-                .style("pointer-events", "none"); // Make sure tooltip doesn't block mouse events
+var container_g = svg1
+    .append('g')
+    .attr('transform', 'translate(' + margin1.left + ',' + margin1.top + ')',);
+
+d3.csv(
+    'https://gist.githubusercontent.com/chansrinivas/fd27e6043da02a8bde32d72a8440dd32/raw/00f25153eb2f1c10f1b653993c54cfb086605c4e/ozone.csv',
+).then((data) => {
+    yScale.domain(
+        data.map(function (d) {
+            return d.Zone;
+        }),
+    );
+
+    xScale.domain(
+        data.map(function (d) {
+            return d.Month;
+        }),
+    );
+
+    // Add chart title
+    svg1
+        .append('text')
+        .attr('class', 'chart-label')
+        .attr('x', canvasWidth / 4.6)
+        .attr('y', margin1.top / 2)
+        .text('Ground Level Ozone in Bay Area in 2023');
+
+    // Add x-axis and label
+    container_g
+        .append('g')
+        .attr('transform', 'translate(0, ' + height1 + ')')
+        .call(d3.axisBottom(xScale))
+        .selectAll("text") // select all the text elements
+        .attr("font-size", "14px") // set the font size of the x-axis tick labels
+        .attr('font-family', 'sans-serif')
+        .attr("fill", "#140431"); // set the fill color of the x-axis tick labels
 
 
-            var mouseover = function (event, d) {
-                tooltip.style("opacity", 1);
-            };
+    // Add y-axis and label
+    container_g
+        .append('g')
+        .call(d3.axisLeft(yScale))
+        .selectAll("text")
+        .attr('font-family', 'sans-serif')
+        .attr('font-size', '14px')
+        .attr('fill', '#140431')
 
-            var mousemove = function (event, d) {
-                console.log(event.pageX)
-                console.log(event.pageY)
-                tooltip
-                    .html("Ozone value: " + d.Ozone)
-                    .style("left", (event.pageX + 20) + "px")
-                    .style("top", (event.pageY - 20) + "px");
-            };
+    svg1.append("g")
+        .attr("class", "legendSequential")
+        .attr("transform", "translate(130,440)");
+    // .attr("width", 900)
 
-            var mouseleave = function (d) {
-                tooltip.style("opacity", 0);
-            };
+    var legendSequential = d3.legendColor()
+        .title("Ground level Ozone")
+        .shapeWidth(137)
+        .cells(5)
+        .orient("horizontal")
+        .scale(heatmapColor);
 
-            container_g.selectAll()
-                .data(data)
-                .enter()
-                .append('rect')
-                .attr('x', function (d) {
-                    return xScale(d.Month);
-                })
-                .attr('y', function (d) {
-                    return yScale(d.Zone);
-                })
-                .attr('width', xScale.bandwidth())
-                .attr('height', yScale.bandwidth())
-                .style('fill', function (d) {
-                    return heatmapColor(d.Ozone);
-                })
-                .attr('class', 'heatmap-rect')
-                .on("mouseover", mouseover)
-                .on("mousemove", mousemove)
-                .on("mouseleave", mouseleave)
+    svg1.select(".legendSequential")
+        .call(legendSequential)
+        .selectAll("text")
+        .attr("font-size", "13px");
 
-        });
+
+    var tooltip = d3.select("#chart-container") // Corrected selection
+        .append("div")
+        .style("opacity", 0)
+        .attr("class", "tooltip")
+        .style("position", "absolute") // Set position to absolute
+        .style("background-color", "white")
+        .style("border-width", "2px")
+        .style("padding", "5px")
+        .style("font-size", "12px")
+        .style("pointer-events", "none"); // Make sure tooltip doesn't block mouse events
+
+
+    var mouseover = function (event, d) {
+        tooltip.style("opacity", 1);
+    };
+
+    var mousemove = function (event, d) {
+        console.log(event.pageX)
+        console.log(event.pageY)
+        tooltip
+            .html("Ozone value: " + d.Ozone)
+            .style("left", (event.pageX + 20) + "px")
+            .style("top", (event.pageY - 20) + "px");
+    };
+
+    var mouseleave = function (d) {
+        tooltip.style("opacity", 0);
+    };
+
+    container_g.selectAll()
+        .data(data)
+        .enter()
+        .append('rect')
+        .attr('x', function (d) {
+            return xScale(d.Month);
+        })
+        .attr('y', function (d) {
+            return yScale(d.Zone);
+        })
+        .attr('width', xScale.bandwidth())
+        .attr('height', yScale.bandwidth())
+        .style('fill', function (d) {
+            return heatmapColor(d.Ozone);
+        })
+        .attr('class', 'heatmap-rect')
+        .on("mouseover", mouseover)
+        .on("mousemove", mousemove)
+        .on("mouseleave", mouseleave)
+
+});
 
 //     </script>
 // </body>
