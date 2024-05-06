@@ -1,212 +1,293 @@
 <!doctype html>
-<html lang="en">
+<html>
+  <head>
+    <title>A11 - Interaction</title>
+    <style>
+      .axis--x path {
+        display: none;
+      }
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Multi Line chart</title>
+      .line {
+        fill: none;
+        stroke: steelBlue;
+        stroke-width: 1.5px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <svg width="960" height="500"></svg>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="https://colorbrewer2.org/export/colorbrewer.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
-</head>
-
-<body>
     <script>
-        var canvasWidth = 1200;
-        var canvasHeight = 600;
-        var margin = 200;
+      var svg = d3.select('svg'),
+        margin = {
+          top: 20,
+          right: 80,
+          bottom: 30,
+          left: 50,
+        },
+        width =
+          svg.attr('width') - margin.left - margin.right,
+        height =
+          svg.attr('height') - margin.top - margin.bottom,
+        g = svg
+          .append('g')
+          .attr(
+            'transform',
+            'translate(' +
+              margin.left +
+              ',' +
+              margin.top +
+              ')',
+          );
 
-        var svg = d3
-            .select('body')
-            .append('svg')
-            .attr('width', canvasWidth)
-            .attr('height', canvasHeight);
+      var parseTime = d3.timeParse('%m/%d/%y');
 
-        var width = svg.attr('width') - margin;
-        var height = svg.attr('height') - margin;
+      var x = d3
+          .scaleTime()
+          .range([0, width - margin.right]),
+        y = d3.scaleLinear().range([height, 0]),
+        z = d3.scaleOrdinal(d3.schemeCategory10);
+
+      const makeLine = d3
+        .line()
+        .curve(d3.curveBasis)
+        .x(function (d) {
+          return xScale(d.date);
+        })
+        .y(function (d) {
+          return y(d.temperature);
+        });
+
+      var line = d3
+        .line()
+        .curve(d3.curveBasis)
+        .x(function (d) {
+          return x(d.date);
+        })
+        .y(function (d) {
+          return y(d.temperature);
+        });
+
+      d3.tsv('vizzes/monthly-housing (1).tsv', function (d) {
+        return d;
+      }).then(function (data) {
+        let columns = ['date', 'hpi', 'numsold'];
+        for (d of data) {
+          d.date = parseTime(d.date);
+          for (var i = 1, n = columns.length, c; i < n; ++i)
+            d[(c = columns[i])] = +d[c];
+        }
+
+        var cities = data.columns
+          .slice(1)
+          .map(function (id) {
+            return {
+              id: id,
+              values: data.map(function (d) {
+                return { date: d.date, temperature: d[id] };
+              }),
+            };
+          });
+
+        x.domain(
+          d3.extent(data, function (d) {
+            return d.date;
+          }),
+        );
+
+        y.domain([
+          d3.min(cities, function (c) {
+            return d3.min(c.values, function (d) {
+              return d.temperature;
+            });
+          }),
+          d3.max(cities, function (c) {
+            return d3.max(c.values, function (d) {
+              return d.temperature;
+            });
+          }),
+        ]);
+
+        z.domain(
+          cities.map(function (c) {
+            return c.id;
+          }),
+        );
+
+        // add X axis
+        const x_axis = g
+          .append('g')
+          .attr('class', 'axis axis--x')
+          .attr('id', 'x_axis')
+          .attr('transform', 'translate(0,' + height + ')')
+          .call(d3.axisBottom(x));
+
+        // add Y axis
+        g.append('g')
+          .attr('class', 'axis axis--y')
+          .call(d3.axisLeft(y))
+          .append('text')
+          .attr('transform', 'rotate(-90)')
+          .attr('y', -38)
+          .attr('dy', '0.71em')
+          .attr('fill', '#000')
+          .text('houses sold');
+
+        // lines
+        var city = g
+          .selectAll('.city')
+          .data(cities)
+          .enter()
+          .append('svg')
+          .attr('class', 'city')
+          .attr('width', width - margin.right);
+
+        // hover
+        function hover(elem) {
+          var attrs = elem.srcElement.attributes;
+          let id = attrs['data-id'].value;
+          let path = city.select('#' + id);
+          if (path.attr('visibility') == 'hidden') {
+            return z(d.id);
+          }
+          city.selectAll('.line').style('stroke', (d) => {
+            if (id === d.id.substring(0, 3).toUpperCase()) {
+              return z(d.id);
+            } else {
+              return 'lightgrey';
+            }
+          });
+        }
+
+        function exit(elem) {
+          var attrs = elem.srcElement.attributes;
+          let id = attrs['data-id'].value;
+          let path = city.select('#' + id);
+          if (path.attr('visibility') == 'hidden') {
+            return;
+          }
+          city.selectAll('.line').style('stroke', (d) => {
+            return z(d.id);
+          });
+        }
+
+        // click
+        function click(elem) {
+          var attrs = elem.srcElement.attributes;
+          let id = attrs['data-id'].value;
+          let path = city.select('#' + id);
+          if (path.attr('visibility') == 'visible') {
+            path.attr('visibility', 'hidden');
+            return;
+          } else {
+            path.attr('visibility', 'visible');
+            city.selectAll('.line').style('stroke', (d) => {
+              return z(d.id);
+            });
+            return;
+          }
+        }
+
+        const xAxis = (g, x) =>
+          g
+            .attr('transform', `translate(0,${height})`)
+            .call(
+              d3
+                .axisBottom(x)
+                .ticks(width / 80)
+                .tickSizeOuter(0),
+            );
+        // zoom
+        function zoomed(event) {
+          const xz = event.transform.rescaleX(x);
+          var zoomedLine = makeLine.x(function (d) {
+            return xz(d.date);
+          });
+          city.selectAll('.line').attr('d', function (d) {
+            return zoomedLine(d.values);
+          });
+          x_axis.call(xAxis, xz);
+        }
+
+        const zoom = d3
+          .zoom()
+          .scaleExtent([1, 5])
+          .extent([
+            [margin.left, 0],
+            [width - margin.right, height],
+          ])
+          .translateExtent([
+            [margin.left, -Infinity],
+            [width - margin.right, Infinity],
+          ])
+          .on('zoom', zoomed);
 
         svg
-            .append('text')
-            .attr('transform', 'translate(390,530)')
-            .attr('x', 0)
-            .attr('y', 50)
-            .attr('font-size', '24px')
-            .text('Bay Area Quality over the past 10 years');
+          .call(zoom)
+          .transition()
+          .duration(100)
+          .call(zoom.scaleTo, 1, [
+            x(Date.UTC(2010, 1, 1)),
+            0,
+          ]);
 
-        var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        // Lines
+        city
+          .append('path')
+          .attr('class', 'line')
+          .attr('d', function (d) {
+            return line(d.values);
+          })
+          .attr('id', (d) =>
+            d.id.substring(0, 3).toUpperCase(),
+          )
+          .attr('data-id', (d) =>
+            d.id.substring(0, 3).toUpperCase(),
+          )
+          .attr('visibility', 'visible')
+          .style('stroke', function (d) {
+            return z(d.id);
+          })
+          .on('mouseover', hover)
+          .on('mouseout', exit);
 
-        var xScale = d3.scaleBand() // Change to scaleBand for ordinal values
-            .domain(monthNames) // Use month names instead of numbers
-            .range([0, width])
-            .padding(0); // Add padding between the bars
-
-        var yScale = d3.scaleLinear()
-            .domain([0, 200])
-            .range([height, 0]);
-
-        var container_g = svg
-            .append('g')
-            .attr(
-                'transform',
-                'translate(' + 100 + ',' + 100 + ')',
+        // Labels
+        svg
+          .selectAll('.label')
+          .data(cities)
+          .enter()
+          .append('text')
+          .datum(function (d) {
+            return {
+              id: d.id,
+              value: d.values[d.values.length - 1],
+            };
+          })
+          .attr('class', 'label')
+          .attr('transform', function (d) {
+            return (
+              'translate(' +
+              x(d.value.date) +
+              ',' +
+              y(d.value.temperature) +
+              ')'
             );
-
-        var monthMap = {
-            "January": 1,
-            "February": 2,
-            "March": 3,
-            "April": 4,
-            "May": 5,
-            "June": 6,
-            "July": 7,
-            "August": 8,
-            "September": 9,
-            "October": 10,
-            "November": 11,
-            "December": 12
-        };
-
-        d3.csv(
-            'https://gist.githubusercontent.com/chansrinivas/73e91e1b5539720f4ce555aad77aa212/raw/ed7c36c871db25cbbfefd4d8c9afc4ad499beb73/bayarea-linechart.csv',
-        ).then((data) => {
-            data.forEach((d) => {
-                d.Month = monthMap[d.Month]; // Convert month name to number
-                for (var country in d) {
-                    if (country !== 'Month' && d.hasOwnProperty(country)) {
-                        d[country] = +d[country];
-                    }
-                }
-            });
-
-            var allValues = data.columns
-                .slice(1)
-                .map((country) => data.map((d) => d[country]))
-                .flat();
-            yScale.domain([
-                d3.min(allValues),
-                d3.max(allValues),
-            ]);
-
-            container_g.selectAll('.line')
-                .data(data.columns.slice(1))
-                .enter()
-                .append('path')
-                .attr('class', 'line')
-                .attr('fill', 'none')
-                .attr('stroke', (d, i) => {
-                    if (d === '2023') return '#F2BC0B';
-                    else if (d === '10-year-average') return 'red';
-                    else return '#d9d9d9'; // Grey for the first 10 years
-                })
-                .attr('stroke-width', (d) => {
-                    if (d === '2023' || d === '10-year-average') return 2.8; // Normal stroke width for red and yellow lines
-                    else return 1.8; // Reduced stroke width for grey lines
-                })
-                .attr('stroke-dasharray', (d) => {
-                    if (d === '10-year-average') return '4,4'; // Define the pattern for the red line (5 units of dash, 5 units of gap)
-                    else return 'none'; // No dash pattern for other lines
-                })
-                .attr('d', (country) =>
-                    d3.line()
-                        .x((d) => xScale(monthNames[d.Month - 1])) // Adjust x-coordinate for month names
-                        .y((d) => yScale(d[country]))(data),
-                )
-                .on('mouseover', function (event, d) {
-                    d3.select(this).attr('stroke', 'green');
-                    var coordinates = d3.pointer(event);
-                    var xPosition = coordinates[0];
-                    var yPosition = coordinates[1];
-                    var dataIndex = Math.round(xScale.invert(xPosition));
-                    var tooltipData = data[dataIndex];
-                    showTooltip(tooltipData, d);
-                })
-                .on('mouseout', function (event, d) {
-                    d3.select(this).attr('stroke', (d, i) => {
-                        if (d === '2023') return '#F2BC0B';
-                        else if (d === '10-year-average') return 'red';
-                        else return '#d9d9d9';
-                    });
-                    hideTooltip();
-                });
-
-
-            function showTooltip(d, country) {
-                var tooltip = container_g.append('g')
-                    .attr('id', 'tooltip')
-                    .attr('transform', 'translate(' + (xScale(monthNames[d.Month - 1]) + 45) + ',' + (yScale(d[country]) + 40) + ')');
-
-                tooltip.append('text')
-                    .attr('font-size', '12px')
-                    .attr('font-weight', 'bold')
-                    .attr('fill', 'black')
-                    .text('AQI: ' + d[country]);
-
-                tooltip.append('text')
-                    .attr('dy', '1.2em') // Adjust dy for the second line to create line spacing
-                    .attr('font-size', '12px')
-                    .attr('fill', 'black')
-                    .text('Year: ' + country); // Show the year
-            }
-
-            function hideTooltip() {
-                d3.select('#tooltip').remove();
-            }
-
-            // Display the X-axis
-            container_g
-                .append('g')
-                .attr('transform', 'translate(-40, ' + height + ')')
-                .call(
-                    d3.axisBottom(xScale)
-                        .tickValues(monthNames) // Set tick values to month names
-                        .tickFormat((d) => d) // Use month names as tick labels
-                )
-                .append('text')
-                .attr('y', height - 255)
-                .attr('x', width)
-                .attr('font-family', 'sans-serif')
-                .attr('font-size', '13px')
-                .attr('fill', 'black')
-                .text('Month');
-
-            // Display the Y-axis
-            container_g
-                .append('g')
-                .call(
-                    d3.axisLeft(yScale)
-                        .tickFormat(function (d) {
-                            return d;
-                        })
-                        .ticks(12),
-                )
-                .append('text')
-                .attr('transform', 'rotate(-90)')
-                .attr('y', 10)
-                .attr('x', -150)
-                .attr('dy', '-5.1em')
-                .attr('font-family', 'sans-serif')
-                .attr('font-size', '13px')
-                .attr('fill', 'black')
-                .text('Air Quality Index');
-
-            // Add legend
-            var legend = svg.append('g')
-                .attr('class', 'legend')
-                .attr('transform', 'translate(190,20)')
-                .attr('font-size', '12px')
-                .call(d3.legendColor()
-                    .shape('rect')
-                    .shapeWidth(30)
-                    .shapeHeight(8)
-                    .shapePadding(35)
-                    .orient('horizontal')
-                    .scale(d3.scaleOrdinal()
-                        .domain(data.columns.slice(1))
-                        .range(['#d9d9d9', '#d9d9d9', '#d9d9d9', '#d9d9d9', '#d9d9d9', '#d9d9d9','#d9d9d9','#d9d9d9','#d9d9d9','#d9d9d9','#F2BC0B', 'red'])
-                    )
-                );
-        });
+          })
+          .attr('x', 55)
+          .attr('y', 15)
+          .attr('dy', '0.35em')
+          .attr('data-id', (d) =>
+            d.id.substring(0, 3).toUpperCase(),
+          )
+          .style('font', '10px sans-serif')
+          .text(function (d) {
+            return d.id;
+          })
+          .on('click', click)
+          .on('mouseover', hover)
+          .on('mouseout', exit);
+      });
     </script>
-</body>
-
+  </body>
 </html>

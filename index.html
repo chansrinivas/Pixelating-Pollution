@@ -13,41 +13,44 @@
 </head>
 <style>
 	.container {
-		margin: 50px;
+		margin: 10px;
+		display: inline-block; 
 		/* Adjust the margin size as needed */
 		position: relative;
 	}
 
 	/* Hide the browser's default checkbox */
 	.container input {
-		position: absolute;
-		opacity: 0;
-		cursor: pointer;
-		height: 0;
-		width: 0;
+		display: none;
+		/* Hide the default checkbox */
 	}
 
 	/* Create a custom checkbox */
 	.checkmark {
-		position: absolute;
-		top: 0;
-		left: 0;
+		position: relative;
+		/* Adjust positioning */
+		display: inline-block;
+		/* Display inline */
 		height: 25px;
 		width: 25px;
 		background-color: #eee;
+		cursor: pointer;
+		/* Add cursor pointer */
+		vertical-align: middle;
+		/* Align vertically with text */
 	}
 
 	/* On mouse-over, add a grey background color */
-	.container:hover input~.checkmark {
+	.container:hover .checkmark {
 		background-color: #ccc;
 	}
 
 	/* When the checkbox is checked, add a blue background */
-	.container input:checked~.checkmark {
-		background-color: #2196F3;
+	.container input:checked+.checkmark {
+		background-color: #a6aaad;
 	}
 
-	/* Create the checkmark/indicator (hidden when not checked) */
+	/* Style the checkmark/indicator */
 	.checkmark:after {
 		content: "";
 		position: absolute;
@@ -55,7 +58,7 @@
 	}
 
 	/* Show the checkmark when checked */
-	.container input:checked~.checkmark:after {
+	.container input:checked+.checkmark:after {
 		display: block;
 	}
 
@@ -67,14 +70,12 @@
 		height: 10px;
 		border: solid white;
 		border-width: 0 3px 3px 0;
-		-webkit-transform: rotate(45deg);
-		-ms-transform: rotate(45deg);
 		transform: rotate(45deg);
+		/* Standard transform */
 	}
 </style>
 
 <body class="is-preload">
-	<!-- <input type = "radio" name = "agree" value = "yes"> Yes -->
 	<div id="wrapper">
 		<header id="header" class="alt">
 			<!-- <span class="logo"><img src="images/logo.png" alt="" /></span> -->
