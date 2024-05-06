@@ -48,7 +48,7 @@ var margin1 = {
     top: 50,
     right: 600,
     bottom: 150,
-    left: 150,
+    left: 190,
 };
 
 var svg1 = d3
@@ -127,7 +127,7 @@ d3.csv(
 
     svg1.append("g")
         .attr("class", "legendSequential")
-        .attr("transform", "translate(130,440)");
+        .attr("transform", "translate(160,440)");
     // .attr("width", 900)
 
     var legendSequential = d3.legendColor()
@@ -141,7 +141,6 @@ d3.csv(
         .call(legendSequential)
         .selectAll("text")
         .attr("font-size", "13px");
-
 
     var tooltip = d3.select("#chart-container") // Corrected selection
         .append("div")
