@@ -98,12 +98,12 @@ d3.csv(
     );
 
     // Add chart title
-    svg1
-        .append('text')
-        .attr('class', 'chart-label')
-        .attr('x', canvasWidth / 4.6)
-        .attr('y', margin1.top / 2)
-        .text('Ground Level Ozone in Bay Area in 2023');
+    // svg1
+    //     .append('text')
+    //     .attr('class', 'chart-label')
+    //     .attr('x', canvasWidth / 4.6)
+    //     .attr('y', margin1.top / 2)
+    //     .text('Ground Level Ozone in Bay Area in 2023');
 
     // Add x-axis and label
     container_g

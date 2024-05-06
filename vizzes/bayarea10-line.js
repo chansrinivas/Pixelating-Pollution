@@ -143,24 +143,33 @@ d3.csv(
                     showTooltip(d);
                 })
                 .on('mouseout', function (event, d) {
-                    d3.select(this).attr('r', 3);
+                    d3.select(this)
+                    .attr('r', (d) => {
+                        if (country === '2023' || country === '10-year-average') return 4; 
+                        else return 3; 
+                    })
                     hideTooltip();
                 });
 
             function showTooltip(d) {
                 var tooltip = container_g.append('g')
                     .attr('id', 'tooltip')
-                    .attr('transform', 'translate(' + (xScale(d.Month) + 45) + ',' + (yScale(d[country]) + 40) + ')');
+                    .attr('transform', 'translate(' + (xScale(d.Month) + 25) + ',' + (yScale(d[country]) - 40) + ')');
 
                 tooltip.append('text')
-                    .attr('font-size', '12px')
+                    .attr('font-size', '13px')
                     .attr('font-weight', 'bold')
                     .attr('fill', 'black')
                     .text('AQI: ' + d[country]);
+                    tooltip.append('text')
+                    .attr('dy', '1.2em') 
+                    .attr('font-size', '13px')
+                    .attr('fill', 'black')
+                    .text('Year: ' + country); //i want to show the year number like 2023 or 10-year-average
 
                 tooltip.append('text')
-                    .attr('dy', '1.2em') 
-                    .attr('font-size', '12px')
+                    .attr('dy', '2.4em') 
+                    .attr('font-size', '13px')
                     .attr('fill', 'black')
                     .text('Month: ' + d.Month);
             }
