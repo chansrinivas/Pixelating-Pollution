@@ -13,15 +13,69 @@
 </head>
 <style>
 	.container {
-            margin: 50px; /* Adjust the margin size as needed */
-            position: relative;
-        }
+		margin: 50px;
+		/* Adjust the margin size as needed */
+		position: relative;
+	}
+
+	/* Hide the browser's default checkbox */
+	.container input {
+		position: absolute;
+		opacity: 0;
+		cursor: pointer;
+		height: 0;
+		width: 0;
+	}
+
+	/* Create a custom checkbox */
+	.checkmark {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 25px;
+		width: 25px;
+		background-color: #eee;
+	}
+
+	/* On mouse-over, add a grey background color */
+	.container:hover input~.checkmark {
+		background-color: #ccc;
+	}
+
+	/* When the checkbox is checked, add a blue background */
+	.container input:checked~.checkmark {
+		background-color: #2196F3;
+	}
+
+	/* Create the checkmark/indicator (hidden when not checked) */
+	.checkmark:after {
+		content: "";
+		position: absolute;
+		display: none;
+	}
+
+	/* Show the checkmark when checked */
+	.container input:checked~.checkmark:after {
+		display: block;
+	}
+
+	/* Style the checkmark/indicator */
+	.container .checkmark:after {
+		left: 9px;
+		top: 5px;
+		width: 5px;
+		height: 10px;
+		border: solid white;
+		border-width: 0 3px 3px 0;
+		-webkit-transform: rotate(45deg);
+		-ms-transform: rotate(45deg);
+		transform: rotate(45deg);
+	}
 </style>
 
 <body class="is-preload">
-
+	<!-- <input type = "radio" name = "agree" value = "yes"> Yes -->
 	<div id="wrapper">
-
 		<header id="header" class="alt">
 			<!-- <span class="logo"><img src="images/logo.png" alt="" /></span> -->
 			<h1 style="color: rgb(0, 0, 0);">Pixelating Pollution</h1>
@@ -61,30 +115,53 @@
 				</div>
 			</section>
 
-			
+
 
 			<section id="first" class="main special">
 				<header class="major">
-						<h2>Ground level AQI in Bay Area</h2>
-					</header>
-						<div id="chart-container"></div>
-						<p>This Chart shows the analysis of ozone level variations across different geographical zones in the Bay Area in 2023.</p>
-					
-					
+					<h2>Ground level AQI in Bay Area</h2>
+				</header>
+				<div id="chart-container"></div>
+				<p>This Chart shows the analysis of ozone level variations across different geographical zones in the
+					Bay Area in 2023.</p>
+
+
 			</section>
-			
+
 
 			<section id="second" class="main special">
 				<header class="major">
 					<h2>AQI during September Wildfires</h2>
 				</header>
-				<div id="d3-viz-container"></div>
-				
-				<p>For months, smoke from Canadian wildfires blanketed the U.S., causing the worst air quality on record.
-					Is this the new normal? The chart visualizes daily Air Quality Index (AQI) values for PM 2.5 in the Bay Area, 
-					focusing on four major cities: San Francisco, San Jose, Oakland, and Fremont. It provides insights 
+				<div id="d3-viz-container">
+					<label class="container">San Francisco
+						<input type="checkbox" checked="checked" value="San-Francisco">
+						<span class="checkmark"></span>
+					</label>
+
+					<label class="container">San Jose
+						<input type="checkbox" checked="checked" value="San-Jose">
+						<span class="checkmark"></span>
+					</label>
+
+					<label class="container">Oakland
+						<input type="checkbox" checked="checked" value="Oakland">
+						<span class="checkmark"></span>
+					</label>
+
+					<label class="container">Fremont
+						<input type="checkbox" checked="checked" value="Fremont">
+						<span class="checkmark"></span>
+					</label>
+				</div>
+
+				<p>For months, smoke from Canadian wildfires blanketed the U.S., causing the worst air quality on
+					record.
+					Is this the new normal? The chart visualizes daily Air Quality Index (AQI) values for PM 2.5 in the
+					Bay Area,
+					focusing on four major cities: San Francisco, San Jose, Oakland, and Fremont. It provides insights
 					into ground-level ozone levels over the orange skies week in September 2023.</p>
-					
+
 			</section>
 
 			<section id="third" class="main special">
@@ -92,38 +169,29 @@
 					<h2>Bay Area in 10 years</h2>
 				</header>
 				<div id="linechart-container"></div>
-					<p>Bay Area air quality has often taken a turn for the worse as the calendar flips from summer to fall, 
-						with spikes in particulate-matter pollution correlating closely with major wildfires.
-						Over the past 10 years, Bay Area air quality has shown a trend of increasingly common spikes in pollution later in the summer, 
-						which come with increased health risks. 
-						Fine particulate matter (PM2.5) pollution is shown in the line chart above.</p>
+				<p>Bay Area air quality has often taken a turn for the worse as the calendar flips from summer to fall,
+					with spikes in particulate-matter pollution correlating closely with major wildfires.
+					Over the past 10 years, Bay Area air quality has shown a trend of increasingly common spikes in
+					pollution later in the summer,
+					which come with increased health risks.
+					Fine particulate matter (PM2.5) pollution is shown in the line chart above.</p>
 			</section>
 
-			<!-- <section id="fourth" class="main special">
+			<section id="fourth" class="main special">
 				<header class="major">
 					<h2>Map</h2>
 				</header>
-				<div id="map"></div>
-				<img src="images/calif.png" alt="" width="600" height="600">
-
-				<a href="vizzes/california.html" target=”_blank”>California</a>
-					<p>This Chart shows the analysis of ozone level variations across different geographical zones in the Bay Area in 2023.</p>
-			</section> -->
-			<section id="fourth" class="main special">
-                <header class="major">
-                    <h2>Map</h2>
-                </header>
-                <div class="container">
-                    <svg id="map" width="960" height="600"></svg>
-                    <div class="tooltip"></div>
-                    <div id="legend" class="legend"></div>
-                </div>
-                <p>Air quality in bay area is most majorly affected by transportation emissions. 
+				<div class="container">
+					<svg id="map" width="960" height="600"></svg>
+					<div class="tooltip"></div>
+					<div id="legend" class="legend"></div>
+				</div>
+				<p>Air quality in bay area is most majorly affected by transportation emissions.
 					The map shows the distribution of AQI values in different counties of California.
-					highlights Los Angeles as the county with the worst air quality. 
-					This is also an effect of rising temperatures in California. 
+					highlights Los Angeles as the county with the worst air quality.
+					This is also an effect of rising temperatures in California.
 					El Dorado and Lakes were two counties with the best AQI levels in 2023.</p>
-            </section>
+			</section>
 
 		</div>
 	</div>
@@ -138,7 +206,7 @@
 	<script src="vizzes/bayarea10-line.js"></script>
 	<script src="https://d3js.org/d3.v7.min.js"></script>
 	<script src="https://colorbrewer2.org/export/colorbrewer.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
 
 	<script src="vizzes/calif-map.js"></script>
 	<script src="https://d3js.org/d3.v7.min.js"></script>
