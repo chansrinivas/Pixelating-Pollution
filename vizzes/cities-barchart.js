@@ -39,7 +39,7 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/3a8ebf18a807d92089111052
 
     svg.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", -5 - margin.left)
+        .attr("y", -10 - margin.left)
         .attr("x", 0 - (height / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
