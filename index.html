@@ -15,54 +15,41 @@
 	.container {
 		margin: 10px;
 		display: inline-block; 
-		/* Adjust the margin size as needed */
 		position: relative;
 	}
 
-	/* Hide the browser's default checkbox */
 	.container input {
 		display: none;
-		/* Hide the default checkbox */
 	}
 
-	/* Create a custom checkbox */
 	.checkmark {
 		position: relative;
-		/* Adjust positioning */
 		display: inline-block;
-		/* Display inline */
 		height: 25px;
 		width: 25px;
 		background-color: #eee;
 		cursor: pointer;
-		/* Add cursor pointer */
 		vertical-align: middle;
-		/* Align vertically with text */
 	}
 
-	/* On mouse-over, add a grey background color */
 	.container:hover .checkmark {
 		background-color: #ccc;
 	}
 
-	/* When the checkbox is checked, add a blue background */
 	.container input:checked+.checkmark {
 		background-color: #4a4b4b;
 	}
 
-	/* Style the checkmark/indicator */
 	.checkmark:after {
 		content: "";
 		position: absolute;
 		display: none;
 	}
 
-	/* Show the checkmark when checked */
 	.container input:checked+.checkmark:after {
 		display: block;
 	}
 
-	/* Style the checkmark/indicator */
 	.container .checkmark:after {
 		left: 9px;
 		top: 5px;
@@ -71,7 +58,6 @@
 		border: solid white;
 		border-width: 0 3px 3px 0;
 		transform: rotate(45deg);
-		/* Standard transform */
 	}
 </style>
 
