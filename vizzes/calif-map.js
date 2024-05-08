@@ -4,12 +4,6 @@ var svgMap = d3.select("#map"),
     widthMap = +svgMap.attr("width"),
     heightMap = +svgMap.attr("height");
 
-var div = d3
-    .select('.container')
-    .append('div')
-    .attr('class', 'tooltip')
-    .style('opacity', 0);
-
 d3.json("https://gist.githubusercontent.com/chansrinivas/166bfa74d14f82284e4edfec66a7e9e6/raw/8d3298de989743e5949ca58bd156c905e762562a/california-counties.geojson")
     .then(function (geojson) {
         var projection = d3.geoMercator()
@@ -40,28 +34,33 @@ d3.json("https://gist.githubusercontent.com/chansrinivas/166bfa74d14f82284e4edfe
                     }
                 })
                 .on("mouseover", function (event, d) {
-                    console.log("x: ", event.pageX)
+                    // Raise transition
+                    d3.select(this)
+                        .raise()
+                        .transition()
+                        .duration(100)
+                        .attr("transform", "scale(1.02)");
+                
                     var countyFIPS = d.properties.County_FIPS_ID;
                     var matchingData = data.find(function (d) { return d.FIPS === countyFIPS; });
                     if (matchingData) {
-                        console.log(matchingData.AQI);
-                    } else {
-                        console.log("None"); 
+                        tippy(this, {
+                            content: `County: ${d.properties.CountyName} <br> AQI: ${matchingData.AQI}`,
+                            allowHTML: true, 
+                            followCursor: true
+                        });
                     }
-
-                    d3.select(this).raise().transition().duration(100).attr("transform", "scale(1.02)").text("x");
-                    div
-                        .html(`County: ${d.properties.CountyName} <br> AQI: ${matchingData.AQI}`)
-                        .style('left',(event.pageX + 40) + 'px')
-                        .style('top', (event.pageY - 100) + 'px')
-                        .style('opacity', 1);
                 })
+                
                 .on("mouseout", function () {
-                    d3.select(this).transition().duration(100).attr("transform", "scale(1)");
-                    div.style('opacity', 0);
+                        d3.select(this)
+                            .transition()
+                            .duration(100)
+                            .attr("transform", "scale(1)");
+                 
+                    tippy.hideAll();
                 });
 
-            
             var legendData = [5, 20, 35, 50, 65, 80, 90];
             var legend = d3.select("#legend")
                 .append("svg")
