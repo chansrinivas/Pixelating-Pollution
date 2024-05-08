@@ -22,7 +22,7 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/ccc6f0942556912314cd3646
 
     const allGroup = ["Y-2013", "Y-2014", "Y-2015", "Y-2016", "Y-2017", "Y-2018", "Y-2019", "Y-2020", "Y-2021", "Y-2022", "Y-2023", "Avg-10-year"]
 
-    const dataReady = allGroup.map(function (grpName) { 
+    const dataReady = allGroup.map(function (grpName) {
         return {
             name: grpName,
             values: data.map(function (d) {
@@ -73,7 +73,7 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/ccc6f0942556912314cd3646
         .y(d => y(+d.value))
         .defined(d => !isNaN(d.value));
 
-        s.selectAll("myLines")
+    s.selectAll("myLines")
         .data(dataReady)
         .join("path")
         .attr("class", d => d.name)
@@ -82,28 +82,28 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/ccc6f0942556912314cd3646
         .attr("stroke-dasharray", d => d.name === "Avg-10-year" ? "5,5" : "none")
         .style("stroke-width", d => (d.name === "Y-2023" || d.name === "Avg-10-year") ? 4.0 : 3.0)
         .style("fill", "none")
-        .each(function(d) {
+        .each(function (d) {
             d.originalStroke = d3.select(this).attr("stroke"); // Store the original stroke color
         })
         .on('mouseover', function (event, d) {
             d3.select(this)
-            .attr('r', 6)
-            .attr("stroke", "#33D259");
+                .attr('r', 6)
+                .attr("stroke", "#227D28");
             s.append('text')
                 .attr('id', 'tooltip')
-                .attr('transform', 'translate(400,1)')
-              
+                .attr('transform', 'translate(340,1)')
+
                 .attr('font-size', '13px')
                 .attr('font-weight', 'bold')
                 .attr('fill', 'black')
-                .text('Year: ' + d.name); 
+                .text('Year: ' + d.name);
         })
         .on('mouseout', function (event, d) {
             d3.select(this)
                 .attr('stroke', d.originalStroke); // Revert stroke color to original on mouseout
             hideTooltip();
         });
-    
+
 
 
     s.selectAll("myDots")
@@ -120,7 +120,7 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/ccc6f0942556912314cd3646
         .attr("stroke", "white")
         .on('mouseover', function (event, d) {
             d3.select(this)
-            .attr('r', 6)
+                .attr('r', 6)
                 .text(d.value)
 
             showTooltip(event, d);
@@ -135,7 +135,7 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/ccc6f0942556912314cd3646
         .data(dataReady)
         .join('g')
         .attr('class', 'legend')
-        .attr('transform', (d, i) => `translate(${30 + i * 60}, -40)`);
+        .attr('transform', (d, i) => `translate(${30 + i * 60}, ${h - 460})`);
 
     legend.append("rect")
         .attr("x", 35)
@@ -153,6 +153,52 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/ccc6f0942556912314cd3646
             currentOpacity = d3.selectAll("." + d.name).style("opacity")
             d3.selectAll("." + d.name).transition().style("opacity", currentOpacity == 1 ? 0 : 1)
         })
+
+    // Add annotation for Wildfire Season
+    s.append("text")
+        .attr("x", 480)
+        .attr("y", 10)
+        // .attr("transform", "rotate(-90)")
+        .attr("text-anchor", "middle")
+        .style("font-size", "14px")
+        .text("Wildfire Season");
+
+    // Add underline for annotation
+    s.append("line")
+        .attr("x1", 650 - 100) // Start point slightly to the left of the text
+        .attr("y1", -20) // Align with the bottom of the text
+        .attr("x2", 650 + 100) // End point slightly to the right of the text
+        .attr("y2", -20) // Align with the bottom of the text
+        .style("stroke", "black") // Color of the line
+        .style("stroke-width", 1); // Width of the line
+
+    s.append("line")
+        .attr("x1", 540 - 10) // Start point slightly to the left of the text
+        .attr("y1", 7) // Align with the bottom of the text
+        .attr("x2", 540 + 10) // End point slightly to the right of the text
+        .attr("y2", 7) // Align with the bottom of the text
+        .style("stroke", "black") // Color of the line
+        .style("stroke-width", 1); // Width of the line
+
+    // Add underline for annotation
+    // Add vertical line for annotation underline
+    s.append("line")
+        .attr("x1", 550) // Align with the x-coordinate of the text
+        .attr("y1", -20) // Start point slightly above the text
+        .attr("x2", 550) // Align with the x-coordinate of the text
+        .attr("y2", 35) // End point slightly below the text
+        .style("stroke", "black") // Color of the line
+        .style("stroke-width", 1); // Width of the line
+
+    s.append("line")
+        .attr("x1", 750) // Align with the x-coordinate of the text
+        .attr("y1", -20) // Start point slightly above the text
+        .attr("x2", 750) // Align with the x-coordinate of the text
+        .attr("y2", 35) // End point slightly below the text
+        .style("stroke", "black") // Color of the line
+        .style("stroke-width", 1); // Width of the line
+
+
 
     function showTooltip(event, d) {
 
