@@ -139,7 +139,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     })
                     .style('opacity', 1)
                     .on('mouseover', function (event, d) {
-                        d3.select(this).attr('r', 6);
+                        d3.select(this)
+                        .attr('r', 6)
+                        .attr("stroke", "#33D259");
                         showTooltip(d);
                     })
                     .on('mouseout', function (event, d) {

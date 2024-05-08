@@ -73,7 +73,7 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/ccc6f0942556912314cd3646
         .y(d => y(+d.value))
         .defined(d => !isNaN(d.value));
 
-    s.selectAll("myLines")
+        s.selectAll("myLines")
         .data(dataReady)
         .join("path")
         .attr("class", d => d.name)
@@ -82,20 +82,28 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/ccc6f0942556912314cd3646
         .attr("stroke-dasharray", d => d.name === "Avg-10-year" ? "5,5" : "none")
         .style("stroke-width", d => (d.name === "Y-2023" || d.name === "Avg-10-year") ? 4.0 : 3.0)
         .style("fill", "none")
+        .each(function(d) {
+            d.originalStroke = d3.select(this).attr("stroke"); // Store the original stroke color
+        })
         .on('mouseover', function (event, d) {
-            d3.select(this).attr('r', 6);
+            d3.select(this)
+            .attr('r', 6)
+            .attr("stroke", "#33D259");
             s.append('text')
                 .attr('id', 'tooltip')
                 .attr('transform', 'translate(400,1)')
-
+              
                 .attr('font-size', '13px')
                 .attr('font-weight', 'bold')
                 .attr('fill', 'black')
                 .text('Year: ' + d.name); 
         })
         .on('mouseout', function (event, d) {
+            d3.select(this)
+                .attr('stroke', d.originalStroke); // Revert stroke color to original on mouseout
             hideTooltip();
         });
+    
 
 
     s.selectAll("myDots")
@@ -111,8 +119,10 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/ccc6f0942556912314cd3646
         .attr("r", 4)
         .attr("stroke", "white")
         .on('mouseover', function (event, d) {
-            d3.select(this).attr('r', 6)
+            d3.select(this)
+            .attr('r', 6)
                 .text(d.value)
+
             showTooltip(event, d);
         })
         .on('mouseout', function (event, d) {
