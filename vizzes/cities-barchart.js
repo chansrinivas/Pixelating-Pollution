@@ -26,8 +26,8 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/3a8ebf18a807d92089111052
     svg.append("g")
         .attr("transform", `translate(0, ${height})`)
         .call(d3.axisBottom(x).tickSize(0))
-        .selectAll(".tick text") // Increase font size of x-axis ticks
-            .style("font-size", "12px"); // Adjust the font size as needed
+        .selectAll(".tick text") 
+            .style("font-size", "12px"); 
 
     const y = d3.scaleLinear()
         .domain([0, 160])
@@ -64,7 +64,7 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/3a8ebf18a807d92089111052
         .selectAll("rect")
         .data(function (d) { return subgroups.map(function (key) { return { key: key, value: d[key] }; }); })
         .join("rect")
-        .attr("class", d => d.key) // Assign class based on subgroup (city name)
+        .attr("class", d => d.key)
         .attr("x", d => xSubgroup(d.key))
         .attr("y", d => y(d.value))
         .attr("width", xSubgroup.bandwidth())
@@ -87,34 +87,33 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/3a8ebf18a807d92089111052
         });
 
         svg.append("line")
-        .attr("x1", 30) // Start point slightly to the left of the text
-        .attr("y1", 10) // Align with the bottom of the text
-        .attr("x2", 250 + 80) // End point slightly to the right of the text
-        .attr("y2", 10) // Align with the bottom of the text
-        .style("stroke", "black") // Color of the line
+        .attr("x1", 30) 
+        .attr("y1", 10) 
+        .attr("x2", 250 + 80) 
+        .attr("y2", 10)
+        .style("stroke", "black")
         .style("stroke-width", 1); 
 
 
         svg.append("line")
-        .attr("x1", 30) // Align with the x-coordinate of the text
-        .attr("y1", -20) // Start point slightly above the text
-        .attr("x2", 30) // Align with the x-coordinate of the text
-        .attr("y2", 35) // End point slightly below the text
-        .style("stroke", "black") // Color of the line
-        .style("stroke-width", 1); // Width of the line
+        .attr("x1", 30) 
+        .attr("y1", -20) 
+        .attr("x2", 30) 
+        .attr("y2", 35) 
+        .style("stroke", "black")
+        .style("stroke-width", 1); 
 
         svg.append("line")
-        .attr("x1", 330) // Align with the x-coordinate of the text
-        .attr("y1", -20) // Start point slightly above the text
-        .attr("x2", 330) // Align with the x-coordinate of the text
-        .attr("y2", 35) // End point slightly below the text
-        .style("stroke", "black") // Color of the line
-        .style("stroke-width", 1); // Width of the line
+        .attr("x1", 330) 
+        .attr("y1", -20)
+        .attr("x2", 330) 
+        .attr("y2", 35) 
+        .style("stroke", "black") 
+        .style("stroke-width", 1); 
 
         svg.append("text")
         .attr("x", 180)
         .attr("y", 30)
-        // .attr("transform", "rotate(-90)")
         .attr("text-anchor", "middle")
         .style("font-size", "14px")
         .text("Huge jump in Daily AQI value in less than 48 hours");

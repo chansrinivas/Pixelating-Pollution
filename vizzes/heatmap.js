@@ -59,7 +59,6 @@ var svg1 = d3
 
 
 var width1 = 650;
-// canvasWidth - margin1.left - margin1.right;
 
 var height1 = canvasHeight - margin1.top - margin1.bottom;
 
@@ -97,26 +96,16 @@ d3.csv(
         }),
     );
 
-    // Add chart title
-    // svg1
-    //     .append('text')
-    //     .attr('class', 'chart-label')
-    //     .attr('x', canvasWidth / 4.6)
-    //     .attr('y', margin1.top / 2)
-    //     .text('Ground Level Ozone in Bay Area in 2023');
 
-    // Add x-axis and label
     container_g
         .append('g')
         .attr('transform', 'translate(0, ' + height1 + ')')
         .call(d3.axisBottom(xScale))
-        .selectAll("text") // select all the text elements
-        .attr("font-size", "14px") // set the font size of the x-axis tick labels
+        .selectAll("text") 
+        .attr("font-size", "14px") 
         .attr('font-family', 'sans-serif')
-        .attr("fill", "#140431"); // set the fill color of the x-axis tick labels
+        .attr("fill", "#140431"); 
 
-
-    // Add y-axis and label
     container_g
         .append('g')
         .call(d3.axisLeft(yScale))
@@ -128,7 +117,6 @@ d3.csv(
     svg1.append("g")
         .attr("class", "legendSequential")
         .attr("transform", "translate(160,440)");
-    // .attr("width", 900)
 
     var legendSequential = d3.legendColor()
         .title("Ground level Ozone")
@@ -142,16 +130,16 @@ d3.csv(
         .selectAll("text")
         .attr("font-size", "13px");
 
-    var tooltip = d3.select("#chart-container") // Corrected selection
+    var tooltip = d3.select("#chart-container")
         .append("div")
         .style("opacity", 0)
         .attr("class", "tooltip")
-        .style("position", "absolute") // Set position to absolute
+        .style("position", "absolute")
         .style("background-color", "white")
         .style("border-width", "2px")
         .style("padding", "5px")
         .style("font-size", "12px")
-        .style("pointer-events", "none"); // Make sure tooltip doesn't block mouse events
+        .style("pointer-events", "none");
 
 
     var mouseover = function (event, d) {
