@@ -71,19 +71,19 @@
 	<div id="wrapper">
 		<header id="header" class="alt">
 			<h1 style="color: rgb(0, 0, 0);">Pixelating Pollution</h1>
-			<p>By Chandana Srinivas<br />
-			</p>
+			<p style="color: black;">By Chandana Srinivas</p>
+		</p>
 		</header>
 
 		<!-- Nav -->
 		<nav id="nav">
 			<ul>
-				<li><a href="#intro" class="active">Introduction</a></li>
-				<li><a href="#first">First Section</a></li>
-				<li><a href="#second">Second Section</a></li>
-				<li><a href="#third">Third Section</a></li>
-				<li><a href="#fourth">Fourth Section</a></li>	
-				<li><a href="#methodology">Methodology</a></li>
+				<!-- <li><a href="#intro" class="active">Introduction</a></li> -->
+				<li><a href="#first">California's AQI Landscape</a></li>
+				<li><a href="#second">Summer Smog</a></li>
+				<li><a href="#third">Regional AQI</a></li>
+				<li><a href="#fourth">September Smog</a></li>	
+				<!-- <li><a href="#methodology">Methodology</a></li> -->
 			</ul>
 		</nav>
 
@@ -93,7 +93,7 @@
 				<div class="spotlight">
 					<div class="content">
 						<header class="major">
-							<h2>Project Overview</h2>
+							<h2>Beyond the Haze</h2>
 						</header>
 						<p>Air pollution is one of the most important environmental threats to urban populations and
 							while all
@@ -105,7 +105,9 @@
 							exposed to.</p>
 					</div>
 					
-					<span class="image"><img src="images/pic01.jpg" alt="" /></span>
+					<!-- <span class="image"> -->
+						<img src="images/main-pic.jpeg" alt="" width="400"/>
+					<!-- </span> -->
 					
 					
 				</div>
@@ -125,11 +127,39 @@
 				
 			</section>
 
-
-
 			<section id="first" class="main special">
 				<header class="major">
-					<h2>Ground level AQI in Bay Area</h2>
+					<h2>Clear Skies, Clouded Lungs: AQI Insights Across California</h2>
+				</header>
+				<div class="container">
+					<svg id="map" width="960" height="600"></svg>
+					<div class="tooltip"></div>
+					<div id="legend" class="legend"></div>
+				</div>
+				<p>Air quality in bay area is most majorly affected by transportation emissions.
+					The map shows the distribution of AQI values in different counties of California.
+					highlights Los Angeles as the county with the worst air quality.
+					This is also an effect of rising temperatures in California.
+					El Dorado and Lakes were two counties with the best AQI levels in 2023.</p>
+			</section>
+
+			<section id="second" class="main special">
+				<header class="major">
+					<h2>Fluctuating Air Quality as Summer Draws to a Close</h2>
+				</header>
+				<div id="linechart-container"></div>
+				<p>Bay Area air quality has often taken a turn for the worse as the calendar flips from summer to fall,
+					with spikes in particulate-matter pollution correlating closely with major wildfires.
+					Over the past 10 years, Bay Area air quality has shown a trend of increasingly common spikes in
+					pollution later in the summer,
+					which come with increased health risks.
+					Fine particulate matter (PM2.5) pollution is shown in the line chart above.</p>
+			</section>
+
+
+			<section id="third" class="main special">
+				<header class="major">
+					<h2>How does AQI values vary in different parts of the Bay Area?</h2>
 				</header>
 				<div id="chart-container"></div>
 				<p>This Chart shows the analysis of ozone level variations across different geographical zones in the
@@ -139,9 +169,9 @@
 			</section>
 
 
-			<section id="second" class="main special">
+			<section id="fourth" class="main special">
 				<header class="major">
-					<h2>AQI during September Wildfires</h2>
+					<h2>Orange Sky Day in September 2023</h2>
 				</header>
 				<div id="d3-viz-container">
 					<label class="container">San Francisco
@@ -174,34 +204,9 @@
 
 			</section>
 
-			<section id="third" class="main special">
-				<header class="major">
-					<h2>Bay Area in 10 years</h2>
-				</header>
-				<div id="linechart-container"></div>
-				<p>Bay Area air quality has often taken a turn for the worse as the calendar flips from summer to fall,
-					with spikes in particulate-matter pollution correlating closely with major wildfires.
-					Over the past 10 years, Bay Area air quality has shown a trend of increasingly common spikes in
-					pollution later in the summer,
-					which come with increased health risks.
-					Fine particulate matter (PM2.5) pollution is shown in the line chart above.</p>
-			</section>
+			
 
-			<section id="fourth" class="main special">
-				<header class="major">
-					<h2>Map</h2>
-				</header>
-				<div class="container">
-					<svg id="map" width="960" height="600"></svg>
-					<div class="tooltip"></div>
-					<div id="legend" class="legend"></div>
-				</div>
-				<p>Air quality in bay area is most majorly affected by transportation emissions.
-					The map shows the distribution of AQI values in different counties of California.
-					highlights Los Angeles as the county with the worst air quality.
-					This is also an effect of rising temperatures in California.
-					El Dorado and Lakes were two counties with the best AQI levels in 2023.</p>
-			</section>
+			
 
 			<section id="methodology" class="main">
 				<div class="spotlight">
@@ -209,9 +214,15 @@
 						<header class="major">
 							<h2>Methodology</h2>
 						</header>
-						<p>The main data is collected from <a href = "https://data.gov/">https://data.gov</a>. The dataset was last updated in December 2023.<br>
+						<p>The main data is collected from <a href = "https://data.gov/">https://data.gov</a>. <br>
+							It comes from U.S. Government's Open Data which is a tool for helping the public understand different public concerns like air pollution hazard.
+							The dataset was last updated in December 2023.<br><br>
 							FIPS codes for CA Counties was collected from <a href = "https://www.weather.gov/hnx/cafips">https://www.weather.gov/hnx/cafips</a><br> <br>
-							Data and information for the top level charts is derived from <a href = "https://www.arb.ca.gov/aqmis2/ozone_annual_tenyear.php">California Air Resources Board.</a> CARB is charged with protecting the public from the harmful effects of air pollution and developing programs and actions to fight climate change.
+							Data and information for the top level charts is derived from <a href = "https://www.arb.ca.gov/aqmis2/ozone_annual_tenyear.php">
+								California Air Resources Board.</a> <br>CARB is charged with protecting the 
+							public from the harmful effects of air pollution and developing programs and actions to fight climate change. It is the lead agency for 
+							climate change 
+							programs and oversees all air pollution control efforts in California to attain and maintain health-based air quality standards.
 						</p>
 					</div>
 					

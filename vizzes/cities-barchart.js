@@ -27,7 +27,7 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/3a8ebf18a807d92089111052
         .attr("transform", `translate(0, ${height})`)
         .call(d3.axisBottom(x).tickSize(0))
         .selectAll(".tick text") 
-            .style("font-size", "12px"); 
+            .style("font-size", "14px"); 
 
     const y = d3.scaleLinear()
         .domain([0, 160])
@@ -35,7 +35,7 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/3a8ebf18a807d92089111052
     svg.append("g")
         .call(d3.axisLeft(y))
         .selectAll(".tick text") // Increase font size of y-axis ticks
-            .style("font-size", "12px"); // Adjust the font size as needed
+            .style("font-size", "14px"); // Adjust the font size as needed
 
     svg.append("text")
         .attr("transform", "rotate(-90)")

@@ -34,7 +34,9 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/ccc6f0942556912314cd3646
         .range([0, w]);
     s.append("g")
         .attr("transform", `translate(0, ${h})`)
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x))
+        .selectAll(".tick text")
+        .style("font-size", "15px");
 
     s.append("text")
         .attr("transform", `translate(${w / 2}, ${h + m.top - 40})`)
@@ -45,7 +47,9 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/ccc6f0942556912314cd3646
         .domain([30, 220])
         .range([h, 0]);
     s.append("g")
-        .call(d3.axisLeft(y));
+        .call(d3.axisLeft(y))
+        .selectAll(".tick text")
+        .style("font-size", "15px");
 
     s.append("text")
         .attr("transform", "rotate(-90)")
