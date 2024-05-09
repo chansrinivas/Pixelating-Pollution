@@ -54,7 +54,7 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/3a8ebf18a807d92089111052
 
     const color = d3.scaleOrdinal()
         .domain(subgroups)
-        .range(['#EFEF6D', '#ff8072', '#bebada', '#8dd3c7']);
+        .range(['#ffff99', '#fdc086','#beaed4', '#7fc97f']);
 
     svg.append("g")
         .selectAll("g")
@@ -97,7 +97,7 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/3a8ebf18a807d92089111052
 
         svg.append("line")
         .attr("x1", 30) 
-        .attr("y1", -20) 
+        .attr("y1", 10) 
         .attr("x2", 30) 
         .attr("y2", 35) 
         .style("stroke", "black")
@@ -105,7 +105,7 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/3a8ebf18a807d92089111052
 
         svg.append("line")
         .attr("x1", 330) 
-        .attr("y1", -20)
+        .attr("y1", 10)
         .attr("x2", 330) 
         .attr("y2", 35) 
         .style("stroke", "black") 
