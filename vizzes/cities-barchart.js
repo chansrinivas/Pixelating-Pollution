@@ -30,7 +30,7 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/3a8ebf18a807d92089111052
             .style("font-size", "12px"); // Adjust the font size as needed
 
     const y = d3.scaleLinear()
-        .domain([0, 150])
+        .domain([0, 160])
         .range([height, 0]);
     svg.append("g")
         .call(d3.axisLeft(y))
@@ -39,7 +39,7 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/3a8ebf18a807d92089111052
 
     svg.append("text")
         .attr("transform", "rotate(-90)")
-        .attr("y", -10 - margin.left)
+        .attr("y", -5 - margin.left)
         .attr("x", 0 - (height / 2))
         .attr("dy", "1em")
         .style("text-anchor", "middle")
@@ -85,6 +85,40 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/3a8ebf18a807d92089111052
                 .style("opacity", 0);
             d3.select(this).attr('opacity', 1).attr('fill', d => color(d.key));
         });
+
+        svg.append("line")
+        .attr("x1", 30) // Start point slightly to the left of the text
+        .attr("y1", 10) // Align with the bottom of the text
+        .attr("x2", 250 + 80) // End point slightly to the right of the text
+        .attr("y2", 10) // Align with the bottom of the text
+        .style("stroke", "black") // Color of the line
+        .style("stroke-width", 1); 
+
+
+        svg.append("line")
+        .attr("x1", 30) // Align with the x-coordinate of the text
+        .attr("y1", -20) // Start point slightly above the text
+        .attr("x2", 30) // Align with the x-coordinate of the text
+        .attr("y2", 35) // End point slightly below the text
+        .style("stroke", "black") // Color of the line
+        .style("stroke-width", 1); // Width of the line
+
+        svg.append("line")
+        .attr("x1", 330) // Align with the x-coordinate of the text
+        .attr("y1", -20) // Start point slightly above the text
+        .attr("x2", 330) // Align with the x-coordinate of the text
+        .attr("y2", 35) // End point slightly below the text
+        .style("stroke", "black") // Color of the line
+        .style("stroke-width", 1); // Width of the line
+
+        svg.append("text")
+        .attr("x", 180)
+        .attr("y", 30)
+        // .attr("transform", "rotate(-90)")
+        .attr("text-anchor", "middle")
+        .style("font-size", "14px")
+        .text("Huge jump in Daily AQI value in less than 48 hours");
+
 
     const legendLabels = ["San Francisco", "San Jose", "Oakland", "Fremont"];
 
