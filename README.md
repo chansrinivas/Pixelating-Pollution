@@ -9,8 +9,8 @@ Air pollution is one of the most important environmental threats to urban popula
 
 - [Project Objectives](#project-objectives)
 - [Pixelating Pollution](#pixelating-pollution)
-- [Rebuild Instructions](#rebuild-instructions)
-- [Interaction](#libraries)
+- [Instructions to Rebuild](#rebuild-instructions)
+- [Interaction](#interaction)
 
 ## Data Sources
 + [data.gov](https://data.gov/)
