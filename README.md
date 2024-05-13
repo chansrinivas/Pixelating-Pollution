@@ -37,6 +37,7 @@ The project can be viewed here:
   + [D3 - annotation](https://d3-annotation.susielu.com/)
   + [d3 SVG Legend](https://d3-legend.susielu.com)
   + [d3 Scale Chromatic](https://github.com/d3/d3-scale-chromatic)
+  + [tippy-js](https://atomiks.github.io/tippyjs/)
 
 ## Interaction
 + Hover over the map to see the AQI value and the county name.
