@@ -200,7 +200,6 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/ccc6f0942556912314cd3646
             .text('Month: ' + d.time);
     }
 
-
     function hideTooltip() {
         d3.select('#tooltip').remove();
     }

@@ -1,47 +1,3 @@
-// <!-- <!doctype html>
-// <html lang="en">
-
-// <head>
-//     <meta charset="UTF-8" />
-//     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-//     <title>D3 Heat Map</title>
-//     <style>
-//         body {
-//             font-family: 'Arial', sans-serif;
-//         }
-
-//         #chart-container {
-//             position: relative;
-//         }
-
-
-//         .chart-background {
-//             fill: #f0f0f0;
-//         }
-
-//         .heatmap-rect {
-//             stroke: #fff;
-//             stroke-width: 1.2px;
-
-//         }
-
-//         .chart-label {
-//             font-size: 18px;
-//             font-weight: bold;
-//             fill: #140431;
-//         }
-//     </style>
-
-//     <script src="https://d3js.org/d3.v7.min.js"></script>
-//     <script src="https://d3js.org/d3-scale-chromatic.v2.min.js"></script>
-//     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
-
-// </head>
-
-// <body>
-//     <div id="chart-container"></div>
-//     <script> -->
-
 var canvasWidth = 1000;
 var canvasHeight = 500;
 var margin1 = {
@@ -180,8 +136,3 @@ d3.csv(
         .on("mouseleave", mouseleave)
 
 });
-
-//     </script>
-// </body>
-
-// </html>

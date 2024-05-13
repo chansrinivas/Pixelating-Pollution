@@ -1,4 +1,3 @@
-// california.js
 
 var svgMap = d3.select("#map"),
     widthMap = +svgMap.attr("width"),
@@ -34,7 +33,6 @@ d3.json("https://gist.githubusercontent.com/chansrinivas/166bfa74d14f82284e4edfe
                     }
                 })
                 .on("mouseover", function (event, d) {
-                    // Raise transition
                     d3.select(this)
                         .raise()
                         .transition()

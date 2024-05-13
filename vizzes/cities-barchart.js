@@ -34,8 +34,8 @@ d3.csv("https://gist.githubusercontent.com/chansrinivas/3a8ebf18a807d92089111052
         .range([height, 0]);
     svg.append("g")
         .call(d3.axisLeft(y))
-        .selectAll(".tick text") // Increase font size of y-axis ticks
-            .style("font-size", "14px"); // Adjust the font size as needed
+        .selectAll(".tick text") 
+            .style("font-size", "14px"); 
 
     svg.append("text")
         .attr("transform", "rotate(-90)")
