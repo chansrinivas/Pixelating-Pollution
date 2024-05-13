@@ -39,7 +39,7 @@ The project can be viewed here:
   + [d3 Scale Chromatic](https://github.com/d3/d3-scale-chromatic)
 
 ## Interaction
-+ Hover over the correlation matrix to highlight the corresponding row and column of each nutrition type.
-+ Hover over the pie charts to see the quantity of caffeine, cholesterol, and sodium.
-+ In the small multiples bar chart wait for `0.5s` before hovering over the next bar.
-+ On reaching the lollipop chart, scroll down on the iframe to reach Grande and Venti and can be scrolled up again.
++ Hover over the map to see the AQI value and the county name.
++ Hover over the lines in the line chart to see the year and hover over the dots to see the AQI Value and the month. You can also filter the years by clicking on the legend.
++ Hover over the heatmap to see the AQI values.
++ Hover over the bar chart to see the AQI values and use the checkboxes to remove cities or add them. 
