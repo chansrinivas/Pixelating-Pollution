@@ -32,7 +32,7 @@ The project can be viewed here:
 + [[Website Link](https://chansrinivas.github.io/Pixelating-Pollution/)]
 
 
-## Rebuild Instructions
+## Instructions to Rebuild
 + Clone the repository: 
   + HTTPS - `https://github.com/chansrinivas/Pixelating-Pollution.git`
   + SSH - `git@github.com:chansrinivas/Pixelating-Pollution.git`
